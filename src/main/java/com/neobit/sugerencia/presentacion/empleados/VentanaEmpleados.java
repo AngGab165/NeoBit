@@ -24,6 +24,9 @@ import com.neobit.sugerencia.negocio.modelo.Empleado;
 
 import java.util.List;
 
+/**
+ * Ventana de gestión de empleados
+ */
 @Component
 public class VentanaEmpleados {
 
