@@ -72,7 +72,12 @@ public class VentanaNotificacionesEmpleado {
         stage.show();
     }
 
-    private void actualizarTabla() {
+    public void actualizarTabla() {
+        if (control.getEmpleadoActual() == null) {
+            System.out.println("Advertencia: No hay empleado actual. No se pueden cargar notificaciones.");
+            return; // No intenta cargar notificaciones si no hay empleado
+        }
+
         Long idEmpleado = control.getEmpleadoActual().getId();
         List<Notificaciones> notificaciones = control.getControlNotificaciones()
                 .obtenerNotificacionesPorEmpleado(idEmpleado);
