@@ -1,11 +1,13 @@
 package com.neobit.sugerencia.presentacion.principal;
 
+import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.presentacion.empleados.VentanaEmpleados;
 import com.neobit.sugerencia.presentacion.sugerencia.ControlSugerencias;
 import com.neobit.sugerencia.presentacion.sugerencia.VentanaSugerencias;
 import com.neobit.sugerencia.presentacion.notificaciones.ControlNotificaciones;
-import com.neobit.sugerencia.presentacion.notificaciones.VentanaNotificaciones;
+
+import com.neobit.sugerencia.presentacion.notificaciones.VentanaNotificacionesEmpleado;
 import com.neobit.sugerencia.presentacion.revisarSugerencias.VentanaRevisarSugerencias;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import javafx.stage.Stage;
 @Component
 public class ControlPrincipalEmpleado {
 
+    private Empleado empleadoActual;
     // Asegúrate de que estas ventanas estén correctamente definidas e implementadas
     @Autowired
     private VentanaPrincipalEmpleado ventanaPrincipalEmpleado;
@@ -29,7 +32,8 @@ public class ControlPrincipalEmpleado {
     private VentanaSugerencias ventanaSugerencias;
 
     @Autowired
-    private VentanaNotificaciones ventanaNotificaciones;
+    @Lazy
+    private VentanaNotificacionesEmpleado ventanaNotificaciones;
 
     @Autowired
     @Lazy
@@ -37,6 +41,9 @@ public class ControlPrincipalEmpleado {
 
     @Autowired
     private ControlSugerencias controlSugerencias;
+
+    @Autowired
+    private ControlNotificaciones controlNotificaciones;
 
     // Inicia la aplicación y muestra la ventana principal
     public void inicia(Stage primaryStage) {
@@ -69,14 +76,35 @@ public class ControlPrincipalEmpleado {
         inicia(stage); // Llamar al método inicia(Stage) ya definido
     }
 
-    public ControlNotificaciones getControlNotificaciones() {
-        return new ControlNotificaciones(); // Retorna una nueva instancia del controlador de notificaciones
+    // Método para establecer el empleado actual
+    public void setEmpleadoActual(Empleado empleado) {
+        this.empleadoActual = empleado;
     }
 
-    public List<Notificaciones> obtenerNotificaciones() {
-        ControlNotificaciones controlNotificaciones = getControlNotificaciones();
-        return controlNotificaciones.obtenerTodasLasNotificaciones(); // Retorna la lista de notificaciones del
-                                                                      // controlador
+    // Método para obtener el empleado actual
+    public Empleado getEmpleadoActual() {
+        return empleadoActual;
+    }
+
+    // Método para obtener las notificaciones del empleado actual
+    public List<Notificaciones> obtenerNotificacionesEmpleado() {
+        if (empleadoActual != null) {
+            return controlNotificaciones.obtenerNotificacionesPorEmpleado(empleadoActual.getId());
+        }
+        return List.of(); // Si no hay empleado, retorna una lista vacía
+    }
+
+    // Método para actualizar las notificaciones
+    public void actualizarNotificacionesEmpleado() {
+        if (empleadoActual != null) {
+            List<Notificaciones> notificaciones = controlNotificaciones
+                    .obtenerNotificacionesPorEmpleado(empleadoActual.getId());
+            System.out.println("Notificaciones actualizadas: " + notificaciones.size());
+        }
+    }
+
+    public ControlNotificaciones getControlNotificaciones() {
+        return controlNotificaciones;
     }
 
 }

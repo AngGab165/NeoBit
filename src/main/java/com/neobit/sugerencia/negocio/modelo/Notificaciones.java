@@ -9,6 +9,8 @@ public class Notificaciones {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long empleadoId;
+
     private String mensaje;
 
     @Temporal(TemporalType.DATE) // Corrección para manejar solo la fecha sin hora
@@ -31,6 +33,14 @@ public class Notificaciones {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getEmpleadoId() {
+        return empleadoId;
+    }
+
+    public void setEmpleadoId(Long empleadoId) {
+        this.empleadoId = empleadoId;
     }
 
     public String getMensaje() {

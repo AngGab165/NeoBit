@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.neobit.sugerencia.presentacion.notificaciones.VentanaNotificaciones;
+import com.neobit.sugerencia.presentacion.notificaciones.VentanaNotificacionesEmpleado;
 import com.neobit.sugerencia.presentacion.sugerencia.VentanaSugerencias;
 
 @Component
@@ -26,7 +26,7 @@ public class VentanaPrincipalEmpleado extends Application {
 
     @Autowired
     @Lazy
-    private VentanaNotificaciones ventanaNotificaciones;
+    private VentanaNotificacionesEmpleado ventanaNotificaciones;
 
     @Override
     public void start(Stage primaryStage) {

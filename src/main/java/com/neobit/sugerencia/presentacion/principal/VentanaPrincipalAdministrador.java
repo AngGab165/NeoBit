@@ -9,12 +9,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VentanaPrincipalAdministrador extends Application {
 
     @Autowired
+    @Lazy
     private ControlPrincipalAdministrador controlPrincipalAdministrador;
 
     private Stage stage;
@@ -44,8 +46,15 @@ public class VentanaPrincipalAdministrador extends Application {
         btnGestionSugerencias.setStyle(
                 "-fx-background-color: #006666; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;");
 
+        // Botón para gestionar notificaciones
+        Button btnGestionNotificaciones = new Button("Gestionar Notificaciones");
+        btnGestionNotificaciones
+                .setOnAction(e -> controlPrincipalAdministrador.muestraVentanaNotificacionesAdministrador());
+        btnGestionNotificaciones.setStyle(
+                "-fx-background-color: #006666; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;");
+
         // Layout
-        VBox vbox = new VBox(20, btnGestionEmpleados, btnGestionSugerencias);
+        VBox vbox = new VBox(20, btnGestionEmpleados, btnGestionSugerencias, btnGestionNotificaciones);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-background-color: #eaf4f4;");

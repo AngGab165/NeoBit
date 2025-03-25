@@ -3,9 +3,11 @@ package com.neobit.sugerencia.presentacion.principal;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.presentacion.login.VentanaLoginAdministrador;
+import com.neobit.sugerencia.presentacion.notificaciones.ControlNotificaciones;
+import com.neobit.sugerencia.presentacion.notificaciones.VentanaNotificacionesAdministrador;
+import com.neobit.sugerencia.presentacion.revisarSugerencias.VentanaRevisarSugerencias;
 import com.neobit.sugerencia.presentacion.empleados.ControlEmpleados;
 import com.neobit.sugerencia.presentacion.empleados.VentanaEmpleados;
-import com.neobit.sugerencia.presentacion.sugerencia.VentanaSugerencias;
 import com.neobit.sugerencia.negocio.ServicioUsuario; // Asegúrate de que el servicio de usuario esté importado
 
 import javafx.stage.Stage;
@@ -16,11 +18,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControlPrincipalAdministrador {
 
+    private final ControlNotificaciones controlNotificaciones;
     @Autowired
     @Lazy
     private VentanaPrincipalAdministrador ventanaPrincipalAdministrador;
 
     @Autowired
+    @Lazy
     private VentanaEmpleados ventanaEmpleados; // Ventana para gestionar empleados
 
     @Autowired
@@ -28,7 +32,10 @@ public class ControlPrincipalAdministrador {
 
     @Autowired
     @Lazy
-    private VentanaSugerencias ventanaSugerencias; // Ventana para revisar sugerencias
+    private VentanaRevisarSugerencias ventanaRevisarSugerencias; // Ventana para revisar sugerencias
+
+    @Autowired
+    private VentanaNotificacionesAdministrador ventanaNotificaciones;
 
     @Autowired
     @Lazy
@@ -36,6 +43,13 @@ public class ControlPrincipalAdministrador {
 
     @Autowired
     private ServicioUsuario servicioUsuario; // Servicio para manejar el registro de usuarios
+
+    @Autowired
+    public ControlPrincipalAdministrador(ControlNotificaciones controlNotificaciones,
+            @Lazy VentanaNotificacionesAdministrador ventanaNotificacionesAdministrador) {
+        this.controlNotificaciones = controlNotificaciones;
+        this.ventanaNotificaciones = ventanaNotificaciones;
+    }
 
     // Inicia la ventana principal del administrador
     public void inicia() {
@@ -50,7 +64,12 @@ public class ControlPrincipalAdministrador {
 
     // Método para mostrar la ventana de revisar sugerencias
     public void muestraVentanaRevisarSugerencias() {
-        ventanaSugerencias.muestra(); // Llamar al método muestra() en lugar de otros métodos
+        ventanaRevisarSugerencias.muestra(); // Llamar al método muestra() en lugar de otros métodos
+    }
+
+    // Muestra la ventana para gestionar notificaciones
+    public void muestraVentanaNotificacionesAdministrador() {
+        ventanaNotificaciones.muestra(this); // Asegúrate de que VentanaNotificaciones tenga el método muestra()
     }
 
     /**
@@ -86,5 +105,9 @@ public class ControlPrincipalAdministrador {
             // Muestra un mensaje de error si ocurre un problema
             ventanaLoginAdministrador.mostrarMensajeError("Hubo un problema al registrar al administrador.");
         }
+    }
+
+    public ControlNotificaciones getControlNotificaciones() {
+        return controlNotificaciones;
     }
 }
