@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class VentanaRevisarSugerencias {
@@ -26,6 +28,8 @@ public class VentanaRevisarSugerencias {
     @Autowired
     @Lazy
     private ControlRevisarSugerencias control;
+    private ObservableList<Sugerencia> sugerenciasOriginales;
+    private ComboBox<String> filtroComboBox;
 
     /**
      * Muestra la ventana con la lista de sugerencias.
@@ -40,6 +44,15 @@ public class VentanaRevisarSugerencias {
 
         stage = new Stage();
         stage.setTitle("Revisar Sugerencias");
+
+        // ComboBox de filtrado
+        filtroComboBox = new ComboBox<>();
+        filtroComboBox.getItems().addAll("Todos", "Más recientes", "Más antiguos", "Pendiente", "Rechazados",
+                "Aprobados");
+        filtroComboBox.setValue("Todos");
+        filtroComboBox.setOnAction(e -> aplicarFiltro());
+
+        filtroComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #006666; -fx-text-fill: #006666;");
 
         // Tabla de sugerencias
         tablaSugerencias = new TableView<>();
@@ -118,14 +131,16 @@ public class VentanaRevisarSugerencias {
         tablaSugerencias.setStyle("-fx-background-color: #ffffff;");
         tablaSugerencias.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        VBox layout = new VBox(20, tablaSugerencias);
+        VBox layout = new VBox(10, filtroComboBox, tablaSugerencias);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: #eaf4f4;");
 
         // Escena
-        Scene escena = new Scene(layout, 700, 450);
+        Scene escena = new Scene(layout, 700, 500);
         stage.setScene(escena);
         stage.show();
+
+        aplicarFiltro();
     }
 
     public void muestra() {
@@ -135,5 +150,43 @@ public class VentanaRevisarSugerencias {
 
         List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
         muestra(control, sugerencias);
+    }
+
+    private void aplicarFiltro() {
+        String filtro = filtroComboBox.getValue();
+        List<Sugerencia> listaFiltrada;
+
+        switch (filtro) {
+            case "Más recientes":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .sorted(Comparator.comparing(Sugerencia::getId).reversed())
+                        .collect(Collectors.toList());
+                break;
+            case "Más antiguos":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .sorted(Comparator.comparing(Sugerencia::getId))
+                        .collect(Collectors.toList());
+                break;
+            case "Pendiente":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> "En espera".equals(s.getEstado()))
+                        .collect(Collectors.toList());
+                break;
+            case "Rechazados":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> "Rechazada".equals(s.getEstado()))
+                        .collect(Collectors.toList());
+                break;
+            case "Aprobados":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> "Aprobada".equals(s.getEstado()))
+                        .collect(Collectors.toList());
+                break;
+            default:
+                listaFiltrada = sugerenciasOriginales;
+                break;
+        }
+
+        tablaSugerencias.setItems(FXCollections.observableArrayList(listaFiltrada));
     }
 }
