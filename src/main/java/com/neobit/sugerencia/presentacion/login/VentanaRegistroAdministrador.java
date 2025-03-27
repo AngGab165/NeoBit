@@ -7,6 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.presentacion.principal.VentanaPrincipalAdministrador;
@@ -18,6 +19,7 @@ public class VentanaRegistroAdministrador {
     private ControlLoginAdministrador controlLoginAdministrador;
 
     @Autowired
+    @Lazy
     private VentanaPrincipalAdministrador ventanaPrincipalAdministrador;
 
     public void mostrar(String tipoUsuario) {

@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.ServicioSugerencia;
+import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -28,13 +30,19 @@ public class ControlSugerencias {
     /**
      * Agrega una nueva sugerencia
      * 
-     * @param titulo      El título de la sugerencia
-     * @param descripcion La descripción breve de la sugerencia
-     * @param autor       El autor de la sugerencia
+     * @param titulo              El título de la sugerencia
+     * @param descripcion         La descripción breve de la sugerencia
+     * @param autor               El autor de la sugerencia
+     * @param ultimaActualizacion
+     * @param fechaCreacion
      */
-    public void agregaSugerencia(String titulo, String descripcion, String autor) {
-        Sugerencia sugerencia = new Sugerencia(titulo, descripcion, autor, "Pendiente", "", "", "", null, null);
+    public void agregaSugerencia(String titulo, String descripcion, String autor, LocalDate fechaCreacion,
+            LocalDate ultimaActualizacion) {
+        // Aquí se asigna el empleado al crear la sugerencia
+        Sugerencia sugerencia = new Sugerencia(titulo, descripcion, autor, "Pendiente", "", fechaCreacion,
+                ultimaActualizacion); // Asignación del empleado
         servicioSugerencia.agregaSugerencia(sugerencia);
+        ventana.actualizarTabla();
         inicia();
     }
 

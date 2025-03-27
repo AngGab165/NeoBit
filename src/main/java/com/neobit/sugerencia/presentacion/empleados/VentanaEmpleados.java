@@ -24,45 +24,49 @@ import com.neobit.sugerencia.negocio.modelo.Empleado;
 
 import java.util.List;
 
+/**
+ * Ventana de gestión de empleados
+ */
 @Component
 public class VentanaEmpleados {
 
-    private Stage stage;
+    private Stage stage; // Mantenemos la referencia a la ventana
     private TableView<Empleado> tableEmpleados;
     private ControlEmpleados control;
     private boolean initialized = false;
 
     /**
-     * Constructor without UI initialization
+     * Constructor sin inicialización de la UI
      */
     public VentanaEmpleados() {
-        // Don't initialize JavaFX components in constructor
+        // No inicializamos los componentes de JavaFX aquí
     }
 
     /**
-     * Initialize UI components on the JavaFX application thread
+     * Inicializa los componentes de la UI en el hilo de JavaFX
      */
     private void initializeUI() {
-        if (initialized) {
-            return;
-        }
-
-        // Create UI only if we're on JavaFX thread
+        // Asegura que la UI se cree solo si estamos en el hilo de JavaFX
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
 
+        // Si la ventana ya ha sido inicializada, no hacemos nada
+        if (initialized) {
+            return;
+        }
+
+        // Crear un nuevo Stage (ventana) cada vez que se muestra
         stage = new Stage();
         stage.setTitle("Gestión de Empleados");
 
-        // Header
+        // Cabecera
         Label lblTitulo = new Label("Gestión de Empleados");
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
         VBox header = new VBox(10, lblTitulo);
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
-        header.getStyleClass().add("header");
 
         // Formulario para agregar empleado
         GridPane formPane = new GridPane();
@@ -136,7 +140,12 @@ public class VentanaEmpleados {
         borderPane.setCenter(vboxMain);
 
         Scene scene = new Scene(borderPane, 800, 600);
-        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
+        // Evita error si no tienes un archivo CSS
+        if (getClass().getResource("/css/styles.css") != null) {
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        }
+
         stage.setScene(scene);
         stage.show();
 
@@ -150,15 +159,21 @@ public class VentanaEmpleados {
      * @param empleados La lista de empleados a mostrar
      */
     public void muestra(ControlEmpleados control, List<Empleado> empleados) {
-        this.control = control;
+        if (control == null) {
+            throw new IllegalArgumentException("El controlador no puede ser null");
+        }
+
+        this.control = control; // Asegúrate de que control esté correctamente asignado
 
         if (!Platform.isFxApplicationThread()) {
             Platform.runLater(() -> this.muestra(control, empleados));
             return;
         }
 
+        // Inicializa la UI si es necesario
         initializeUI();
 
+        // Cargar empleados
         ObservableList<Empleado> data = FXCollections.observableArrayList(empleados);
         tableEmpleados.setItems(data);
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControlLoginEmpleado {
 
+    private static String autorActual;
+
     @Autowired
     private VentanaLoginEmpleado ventanaLoginEmpleado;
 
@@ -79,6 +81,14 @@ public class ControlLoginEmpleado {
         } else {
             ventanaLoginEmpleado.mostrarMensajeError("Hubo un error al registrar el usuario.");
         }
+    }
+
+    public static void setAutorActual(String nombreEmpleado) {
+        autorActual = nombreEmpleado; // Asignar el nombre del empleado a la variable estática
+    }
+
+    public static String getAutorActual() {
+        return autorActual; // Obtener el nombre del autor
     }
 
     /**
