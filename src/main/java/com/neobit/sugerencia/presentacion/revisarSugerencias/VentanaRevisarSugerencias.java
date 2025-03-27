@@ -82,6 +82,7 @@ public class VentanaRevisarSugerencias {
         columnaAcciones.setCellFactory(param -> new TableCell<>() {
             private final ComboBox<String> comboEstado = new ComboBox<>();
             private final Button btnActualizar = new Button("Actualizar");
+            private final Button btnRetroalimentacion = new Button("Retroalimentación");
 
             {
                 comboEstado.getItems().addAll("Aprobada", "En espera", "Rechazada");
@@ -117,6 +118,11 @@ public class VentanaRevisarSugerencias {
                         });
                     }
                 });
+
+                btnRetroalimentacion.setOnAction(e -> {
+                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
+                    mostrarVentanaRetroalimentacion(sugerencia);
+                });
             }
 
             @Override
@@ -127,7 +133,7 @@ public class VentanaRevisarSugerencias {
                 } else {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
                     comboEstado.setValue(sugerencia.getEstado()); // Muestra el estado actual
-                    HBox accionesBox = new HBox(5, comboEstado, btnActualizar);
+                    HBox accionesBox = new HBox(5, comboEstado, btnActualizar, btnRetroalimentacion);
                     accionesBox.setAlignment(Pos.CENTER);
                     setGraphic(accionesBox);
                 }
@@ -203,4 +209,50 @@ public class VentanaRevisarSugerencias {
 
         tablaSugerencias.setItems(FXCollections.observableArrayList(listaFiltrada));
     }
+
+    /**
+     * Muestra una ventana para enviar retroalimentación sobre una sugerencia.
+     *
+     * @param sugerencia La sugerencia a la que se le enviará la retroalimentación.
+     */
+    private void mostrarVentanaRetroalimentacion(Sugerencia sugerencia) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Enviar Retroalimentación");
+        alert.setHeaderText("Retroalimentación para: " + sugerencia.getTitulo());
+
+        // Crear un área de texto para la retroalimentación
+        TextArea txtRetroalimentacion = new TextArea();
+        txtRetroalimentacion.setPromptText("Escribe aquí la retroalimentación...");
+        txtRetroalimentacion.setWrapText(true);
+
+        // Contenedor para el área de texto
+        VBox content = new VBox(10, new Label("Escribe tu retroalimentación:"), txtRetroalimentacion);
+        content.setPadding(new Insets(10));
+
+        // Agregar contenido al Alert
+        alert.getDialogPane().setContent(content);
+
+        // Botones
+        ButtonType enviarButton = new ButtonType("Enviar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelarButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(enviarButton, cancelarButton);
+
+        // Mostrar ventana y obtener la respuesta del usuario
+        alert.showAndWait().ifPresent(response -> {
+            if (response == enviarButton) {
+                String retroalimentacion = txtRetroalimentacion.getText().trim();
+                if (!retroalimentacion.isEmpty()) {
+                    control.enviarRetroalimentacion(sugerencia.getId(), retroalimentacion);
+                    Alert confirmacion = new Alert(Alert.AlertType.INFORMATION,
+                            "Retroalimentación enviada correctamente.", ButtonType.OK);
+                    confirmacion.showAndWait();
+                } else {
+                    Alert error = new Alert(Alert.AlertType.ERROR, "La retroalimentación no puede estar vacía.",
+                            ButtonType.OK);
+                    error.showAndWait();
+                }
+            }
+        });
+    }
+
 }

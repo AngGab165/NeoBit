@@ -82,4 +82,27 @@ public class ControlRevisarSugerencias {
     public List<Sugerencia> obtenerTodasLasSugerencias() {
         return servicioSugerencia.recuperaSugerencias();
     }
+
+    public void enviarRetroalimentacion(Long id, String retroalimentacion) {
+        try {
+            // Buscar la sugerencia por ID
+            Sugerencia sugerencia = servicioSugerencia.buscaSugerenciaPorId(id);
+
+            if (sugerencia == null) {
+                mostrarAlerta("Error", "No se encontró la sugerencia con ID: " + id, AlertType.ERROR);
+                return;
+            }
+
+            // Guardar la retroalimentación en la sugerencia
+            sugerencia.setRetroalimentacion(retroalimentacion);
+
+            // Actualizar la sugerencia en la base de datos
+            servicioSugerencia.actualizaSugerencia(sugerencia);
+
+            mostrarAlerta("Éxito", "Retroalimentación enviada correctamente.", AlertType.INFORMATION);
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo enviar la retroalimentación: " + e.getMessage(), AlertType.ERROR);
+        }
+    }
+
 }

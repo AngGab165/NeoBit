@@ -18,6 +18,7 @@ public class Sugerencia {
     private String autor;
     private String estado;
     private String estadoAnterior;
+    private String retroalimentacion;
 
     @Column(name = "FECHA_CREACION")
     private LocalDate fechaCreacion;
@@ -128,6 +129,14 @@ public class Sugerencia {
 
     public void setUltimaActualizacion(LocalDate ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public String getRetroalimentacion() {
+        return retroalimentacion;
+    }
+
+    public void setRetroalimentacion(String retroalimentacion) {
+        this.retroalimentacion = retroalimentacion;
     }
 
     public List<Comentario> getComentarios() {

@@ -36,7 +36,8 @@ public class ControlSugerencias {
      * @param ultimaActualizacion
      * @param fechaCreacion
      */
-    public void agregaSugerencia(String titulo, String descripcion, String autor, LocalDate fechaCreacion,
+    public void agregaSugerencia(String titulo, String descripcion, String autor,
+            LocalDate fechaCreacion,
             LocalDate ultimaActualizacion) {
         // Aquí se asigna el empleado al crear la sugerencia
         Sugerencia sugerencia = new Sugerencia(titulo, descripcion, autor, "Pendiente", "", fechaCreacion,
