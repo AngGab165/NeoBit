@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,6 +62,18 @@ public class VentanaRevisarSugerencias {
 
         TableColumn<Sugerencia, String> columnaTitulo = new TableColumn<>("Título");
         columnaTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
+
+        TableColumn<Sugerencia, String> descripcionColumn = new TableColumn<>("Descripción");
+        descripcionColumn.setCellValueFactory(new PropertyValueFactory<>("descripcionBreve"));
+
+        TableColumn<Sugerencia, String> autorColumn = new TableColumn<>("Autor");
+        autorColumn.setCellValueFactory(new PropertyValueFactory<>("autor"));
+
+        TableColumn<Sugerencia, LocalDate> fechaCreacionColumn = new TableColumn<>("Fecha Creación");
+        fechaCreacionColumn.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+
+        TableColumn<Sugerencia, LocalDate> ultimaActualizacionColumn = new TableColumn<>("Última Actualización");
+        ultimaActualizacionColumn.setCellValueFactory(new PropertyValueFactory<>("ultimaActualizacion"));
 
         TableColumn<Sugerencia, String> columnaEstado = new TableColumn<>("Estado");
         columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
@@ -121,7 +134,8 @@ public class VentanaRevisarSugerencias {
             }
         });
 
-        tablaSugerencias.getColumns().addAll(columnaId, columnaTitulo, columnaEstado, columnaAcciones);
+        tablaSugerencias.getColumns().addAll(columnaId, columnaTitulo, descripcionColumn, autorColumn,
+                fechaCreacionColumn, ultimaActualizacionColumn, columnaEstado, columnaAcciones);
 
         // Datos
         ObservableList<Sugerencia> datos = FXCollections.observableArrayList(sugerencias);
@@ -136,7 +150,7 @@ public class VentanaRevisarSugerencias {
         layout.setStyle("-fx-background-color: #eaf4f4;");
 
         // Escena
-        Scene escena = new Scene(layout, 700, 500);
+        Scene escena = new Scene(layout, 800, 600);
         stage.setScene(escena);
         stage.show();
 
