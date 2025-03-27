@@ -18,20 +18,21 @@ public class Sugerencia {
     private String autor;
     private String estado;
     private String estadoAnterior;
-    private LocalDate fechaCreacion;
-    private LocalDate ultimaActualizacion;
 
-    @ManyToOne
-    @JoinColumn(name = "empleado_id", nullable = false)
-    private Empleado empleado;
+    @Column(name = "FECHA_CREACION")
+    private LocalDate fechaCreacion;
+    @Column(name = "ULTIMA_ACTUALIZACION")
+    private LocalDate ultimaActualizacion;
 
     @OneToMany(mappedBy = "sugerencia", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comentarios = new ArrayList<>();
 
+    public Sugerencia() {
+    }
+
     // Constructor completo
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado,
-            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion,
-            Empleado empleado) {
+            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion) {
         this.titulo = titulo;
         this.descripcionBreve = descripcionBreve;
         this.autor = autor;
@@ -39,11 +40,10 @@ public class Sugerencia {
         this.estadoAnterior = estadoAnterior;
         this.fechaCreacion = fechaCreacion;
         this.ultimaActualizacion = ultimaActualizacion;
-        this.empleado = empleado;
     }
 
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado, String estadoAnterior,
-            String fechaCreacion, String ultimaActualizacion, Object empleado, Object comentarios) {
+            String fechaCreacion, String ultimaActualizacion, Object comentarios) {
         this.titulo = titulo;
         this.descripcionBreve = descripcionBreve;
         this.autor = autor;
@@ -58,7 +58,7 @@ public class Sugerencia {
         // Empleado y comentarios se deben asignar correctamente dependiendo de su tipo.
         // Aquí supongo que son objetos.
         // Estos deberían ser instancias válidas, por lo que se haría algo como esto:
-        this.empleado = (Empleado) empleado; // Asegúrate de que el objeto empleado sea de tipo Empleado
+
         this.comentarios = (List<Comentario>) comentarios; // Asegúrate de que el objeto comentarios sea una lista de
                                                            // Comentario
     }
@@ -128,14 +128,6 @@ public class Sugerencia {
 
     public void setUltimaActualizacion(LocalDate ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
-    }
-
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
     }
 
     public List<Comentario> getComentarios() {

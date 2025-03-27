@@ -1,6 +1,7 @@
 package com.neobit.sugerencia.presentacion.detallesSugerencia;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.ServicioComentario;
@@ -14,6 +15,7 @@ public class ControlVerDetallesSugerencia {
     private ServicioComentario servicioComentario;
 
     @Autowired
+    @Lazy
     private VentanaVerDetallesSugerencia ventana;
 
     private Sugerencia sugerencia;

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.neobit.sugerencia.datos.SugerenciaRepository;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 
+import jakarta.transaction.Transactional;
+
 @Service
 /**
  * Servicio relacionado con las sugerencias
@@ -36,8 +38,11 @@ public class ServicioSugerencia {
      * 
      * @param sugerencia La sugerencia a agregar
      */
+    @Transactional
     public void agregaSugerencia(Sugerencia sugerencia) {
+        System.out.println("Guardando sugerencia: " + sugerencia.getTitulo()); // Mensaje de depuración
         sugerenciaRepository.save(sugerencia);
+        System.out.println("Sugerencia guardada correctamente.");
     }
 
     /**

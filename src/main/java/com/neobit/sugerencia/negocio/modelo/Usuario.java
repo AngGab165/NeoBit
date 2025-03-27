@@ -1,9 +1,14 @@
 package com.neobit.sugerencia.negocio.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
@@ -18,6 +23,9 @@ public class Usuario {
     private String nombre;
     private String correo;
     private String contrasena;
+
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Sugerencia> sugerencias = new ArrayList<>();
 
     @Enumerated(EnumType.STRING) // Usamos un Enum para el rol
     private Rol rol;

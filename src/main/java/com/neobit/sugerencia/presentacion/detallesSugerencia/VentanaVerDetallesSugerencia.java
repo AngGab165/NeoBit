@@ -15,6 +15,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.modelo.Comentario;
@@ -28,6 +30,8 @@ public class VentanaVerDetallesSugerencia {
 
     private Stage stage;
     private TableView<Comentario> tableComentarios;
+    @Autowired
+    @Lazy
     private ControlVerDetallesSugerencia control;
     private boolean initialized = false;
 

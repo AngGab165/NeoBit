@@ -11,11 +11,4 @@ import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 @Repository
 public interface SugerenciaRepository extends JpaRepository<Sugerencia, Long> {
 
-    /**
-     * Encuentra una sugerencia a partir de un título
-     * 
-     * @param titulo
-     * @return
-     */
-    public Sugerencia findByTitulo(String titulo);
 }

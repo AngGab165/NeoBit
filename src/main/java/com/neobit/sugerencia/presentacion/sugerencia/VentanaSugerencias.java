@@ -23,7 +23,11 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
+import com.neobit.sugerencia.negocio.modelo.Usuario;
+import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
+import com.neobit.sugerencia.presentacion.detallesSugerencia.VentanaVerDetallesSugerencia;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -34,6 +38,9 @@ public class VentanaSugerencias {
     @Autowired
     @Lazy
     private ControlSugerencias control;
+    @Autowired
+    @Lazy
+    private VentanaVerDetallesSugerencia ventanaVerDetalles;
     private boolean initialized = false;
 
     /**
@@ -84,18 +91,16 @@ public class VentanaSugerencias {
         TextField txtAutor = new TextField();
         txtAutor.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
 
-        Button btnAgregar = new Button("Agregar");
+        Button btnAgregar = new Button("Agregar Sugerencia");
         btnAgregar.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         btnAgregar.setOnAction(e -> {
             String titulo = txtTitulo.getText();
             String descripcion = txtDescripcion.getText();
             String autor = txtAutor.getText();
-            if (!titulo.isEmpty() && !descripcion.isEmpty() && !autor.isEmpty()) {
-                control.agregaSugerencia(titulo, descripcion, autor);
-                txtTitulo.clear();
-                txtDescripcion.clear();
-                txtAutor.clear();
-            }
+            LocalDate fechaCreacion = LocalDate.now();
+            LocalDate ultimaActualizacion = LocalDate.now();
+            control.agregaSugerencia(titulo, descripcion, autor, fechaCreacion, ultimaActualizacion);
+            actualizarTabla();
         });
 
         formPane.add(lblTituloSugerencia, 0, 0);
@@ -120,10 +125,26 @@ public class VentanaSugerencias {
         TableColumn<Sugerencia, String> autorColumn = new TableColumn<>("Autor");
         autorColumn.setCellValueFactory(new PropertyValueFactory<>("autor"));
 
+        TableColumn<Sugerencia, LocalDate> fechaCreacionColumn = new TableColumn<>("Fecha Creación");
+        fechaCreacionColumn.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+
+        TableColumn<Sugerencia, LocalDate> ultimaActualizacionColumn = new TableColumn<>("Última Actualización");
+        ultimaActualizacionColumn.setCellValueFactory(new PropertyValueFactory<>("ultimaActualizacion"));
+
+        TableColumn<Sugerencia, String> estadoColumn = new TableColumn<>("Estado");
+        estadoColumn.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
         TableColumn<Sugerencia, Void> accionesColumn = new TableColumn<>("Acciones");
         accionesColumn.setCellFactory(param -> new TableCell<Sugerencia, Void>() {
+            private final Button btnVerDetalles = new Button("Ver Detalles");
             private final Button btnEliminar = new Button("Eliminar");
             {
+                btnVerDetalles.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+                btnVerDetalles.setOnAction(e -> {
+                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
+                    ventanaVerDetalles.muestra(null, sugerencia);
+
+                });
                 btnEliminar.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
                 btnEliminar.setOnAction(e -> {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
@@ -137,12 +158,14 @@ public class VentanaSugerencias {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(btnEliminar);
+                    VBox vbox = new VBox(5, btnVerDetalles, btnEliminar);
+                    setGraphic(vbox);
                 }
             }
         });
 
-        tableSugerencias.getColumns().addAll(idColumn, tituloColumn, descripcionColumn, autorColumn, accionesColumn);
+        tableSugerencias.getColumns().addAll(idColumn, tituloColumn, descripcionColumn, autorColumn,
+                fechaCreacionColumn, ultimaActualizacionColumn, estadoColumn, accionesColumn);
 
         // Layout
         VBox vboxMain = new VBox(20, formPane, tableSugerencias);
@@ -176,6 +199,14 @@ public class VentanaSugerencias {
         tableSugerencias.setItems(data);
 
         stage.show();
+    }
+
+    public void actualizarTabla() {
+        if (control != null) {
+            List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
+            ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
+            tableSugerencias.setItems(data);
+        }
     }
 
     public void muestra() {
