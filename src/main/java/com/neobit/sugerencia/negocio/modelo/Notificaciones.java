@@ -7,13 +7,18 @@ import java.util.Date;
 public class Notificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private Long empleadoId;
+    private Long id;  // Esto es la clave primaria correcta
 
     private String mensaje;
+    private String estado;
+    private String tipo;
 
-    @Temporal(TemporalType.DATE) // Corrección para manejar solo la fecha sin hora
+    // Relación con Empleado (destinatario)
+    @ManyToOne
+    @JoinColumn(name = "empleado_id", nullable = false) // Enlace correcto con la FK
+    private Empleado empleado;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
 
     // Constructor vacío
@@ -21,9 +26,10 @@ public class Notificaciones {
     }
 
     // Constructor completo
-    public Notificaciones(String mensaje, Date fecha) {
+    public Notificaciones(String mensaje, Date fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
+        this.empleado = empleado;
     }
 
     // Getters y Setters
@@ -35,12 +41,12 @@ public class Notificaciones {
         this.id = id;
     }
 
-    public Long getEmpleadoId() {
-        return empleadoId;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setEmpleadoId(Long empleadoId) {
-        this.empleadoId = empleadoId;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getMensaje() {
@@ -51,6 +57,14 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
     public Date getFecha() {
         return fecha;
     }
@@ -58,4 +72,13 @@ public class Notificaciones {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
 }
+

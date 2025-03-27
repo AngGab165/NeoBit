@@ -83,7 +83,7 @@ public class VentanaNotificacionesAdministrador {
                 SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
                 Date fecha = formato.parse(txtFecha.getText());
                 if (!mensaje.isEmpty()) {
-                    control.agregaNotificacion(mensaje, fecha);
+                    control.agregaNotificacion(mensaje, fecha, null);
                     actualizarTabla();
                     txtMensaje.clear();
                     txtFecha.clear();
