@@ -105,4 +105,9 @@ public class ControlRevisarSugerencias {
         }
     }
 
+    public void recomendarSugerencia(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("recomendarSugerencia");
+    }
+
 }
