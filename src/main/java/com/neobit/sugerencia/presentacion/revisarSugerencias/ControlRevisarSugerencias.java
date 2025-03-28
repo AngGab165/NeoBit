@@ -105,4 +105,27 @@ public class ControlRevisarSugerencias {
         }
     }
 
+    public void recomendarSugerencia(Long id) {
+        try {
+            Sugerencia sugerencia = servicioSugerencia.buscaSugerenciaPorId(id);
+
+            if (sugerencia == null) {
+                mostrarAlerta("Error", "No se encontró la sugerencia con ID: " + id, AlertType.ERROR);
+                return;
+            }
+
+            // Aquí podrías marcar la sugerencia como recomendada en la BD si es necesario
+            servicioSugerencia.recomendarSugerencia(id);
+
+            // Enviar notificación al empleado
+            servicioSugerencia.enviarNotificacion(sugerencia.getAutor(),
+                    "Tu sugerencia '" + sugerencia.getTitulo() + "' ha sido recomendada.");
+
+            mostrarAlerta("Éxito", "Sugerencia recomendada y notificación enviada.", AlertType.INFORMATION);
+
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo recomendar la sugerencia: " + e.getMessage(), AlertType.ERROR);
+        }
+    }
+
 }

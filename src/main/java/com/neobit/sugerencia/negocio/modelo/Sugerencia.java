@@ -19,6 +19,11 @@ public class Sugerencia {
     private String estado;
     private String estadoAnterior;
     private String retroalimentacion;
+    private boolean recomendada;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Prioridad prioridad;
 
     @Column(name = "FECHA_CREACION")
     private LocalDate fechaCreacion;
@@ -33,7 +38,7 @@ public class Sugerencia {
 
     // Constructor completo
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado,
-            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion) {
+            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion, Prioridad prioridad) {
         this.titulo = titulo;
         this.descripcionBreve = descripcionBreve;
         this.autor = autor;
@@ -41,6 +46,7 @@ public class Sugerencia {
         this.estadoAnterior = estadoAnterior;
         this.fechaCreacion = fechaCreacion;
         this.ultimaActualizacion = ultimaActualizacion;
+        this.prioridad = prioridad;
     }
 
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado, String estadoAnterior,
@@ -95,6 +101,14 @@ public class Sugerencia {
 
     public void setAutor(String autor) {
         this.autor = autor;
+    }
+
+    public Prioridad getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(Prioridad prioridad) {
+        this.prioridad = prioridad;
     }
 
     public String getEstado() {
@@ -162,5 +176,13 @@ public class Sugerencia {
     public String toString() {
         return "Sugerencia [id=" + id + ", titulo=" + titulo + ", autor=" + autor
                 + ", estado=" + estado + ", comentarios=" + comentarios.size() + "]";
+    }
+
+    public boolean isRecomendada() {
+        return recomendada;
+    }
+
+    public void setRecomendada(boolean recomendada) {
+        this.recomendada = recomendada;
     }
 }

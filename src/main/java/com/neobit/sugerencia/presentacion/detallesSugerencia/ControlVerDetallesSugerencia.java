@@ -1,5 +1,7 @@
 package com.neobit.sugerencia.presentacion.detallesSugerencia;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -7,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.ServicioComentario;
 import com.neobit.sugerencia.negocio.modelo.Comentario;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
+
+import javafx.application.Platform;
 
 @Component
 public class ControlVerDetallesSugerencia {
@@ -27,7 +31,7 @@ public class ControlVerDetallesSugerencia {
      */
     public void inicia(Sugerencia sugerencia) {
         this.sugerencia = sugerencia;
-        ventana.muestra(this, sugerencia);
+        ventana.muestra(sugerencia);
     }
 
     /**
@@ -36,13 +40,28 @@ public class ControlVerDetallesSugerencia {
      * @param textoComentario El texto del nuevo comentario
      */
     public void agregarComentario(String textoComentario) {
-        Comentario nuevoComentario = new Comentario();
-        nuevoComentario.setTexto(textoComentario);
-        nuevoComentario.setAutor("Usuario Actual"); // Reemplazar con el autor real
-        nuevoComentario.setFecha("Fecha Actual"); // Reemplazar con la fecha actual
+        if (sugerencia == null) {
+            System.out.println("Error: No hay sugerencia seleccionada.");
+            return;
+        }
 
-        servicioComentario.agregarComentario(sugerencia, nuevoComentario);
-        sugerencia.getComentarios().add(nuevoComentario);
-        ventana.muestra(this, sugerencia);
+        // Crear un nuevo comentario con solo el texto
+        Comentario comentario = new Comentario();
+        comentario.setTexto(textoComentario); // Solo se guarda el texto
+        comentario.setFecha(LocalDateTime.now()); // Fecha actual
+        comentario.setSugerencia(sugerencia); // Asociamos la sugerencia
+
+        // Guardar el comentario en la base de datos
+        servicioComentario.guardar(comentario);
+
+        System.out.println("Comentario guardado: " + comentario.getTexto());
+
+        // Actualizar la lista de comentarios en la UI
+        Platform.runLater(() -> {
+            sugerencia.getComentarios().add(comentario);
+            // Suponiendo que `ventana` tiene un método `actualizarComentarios`
+            ventana.actualizarComentarios();
+        });
     }
+
 }

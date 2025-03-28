@@ -1,6 +1,8 @@
 package com.neobit.sugerencia.negocio.modelo;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,15 +15,16 @@ public class Notificaciones {
 
     private String mensaje;
 
-    @Temporal(TemporalType.DATE) // Corrección para manejar solo la fecha sin hora
-    private Date fecha;
+    private String destinatario;
+
+    private LocalDateTime fecha;
 
     // Constructor vacío
     public Notificaciones() {
     }
 
     // Constructor completo
-    public Notificaciones(String mensaje, Date fecha) {
+    public Notificaciones(String mensaje, LocalDateTime fecha) {
         this.mensaje = mensaje;
         this.fecha = fecha;
     }
@@ -51,11 +54,19 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
-    public Date getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String autor) {
+        this.destinatario = autor;
     }
 }

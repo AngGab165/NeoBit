@@ -31,9 +31,12 @@ public class VentanaVerDetallesSugerencia {
     private Stage stage;
     private TableView<Comentario> tableComentarios;
     @Autowired
-    @Lazy
     private ControlVerDetallesSugerencia control;
     private boolean initialized = false;
+    private Label lblTituloValue;
+    private Label lblDescripcionValue;
+
+    private Sugerencia sugerencia;
 
     /**
      * Constructor sin inicialización de la UI
@@ -46,22 +49,44 @@ public class VentanaVerDetallesSugerencia {
      * Inicializa los componentes de la UI en el hilo de la aplicación JavaFX
      */
     private void initializeUI() {
+        // Evitar reinicialización si ya ha sido inicializado
         if (initialized) {
             return;
         }
 
+        // Asegúrate de que se ejecute en el hilo de JavaFX si no estás ya en él
+        if (Platform.isFxApplicationThread()) {
+            crearUI(); // Crear la interfaz si ya estamos en el hilo de JavaFX
+        } else {
+            Platform.runLater(this::crearUI); // Ejecutar en el hilo de JavaFX si no estamos en él
+        }
+    }
+
+    private void crearUI() {
         // Crear UI solo si estamos en el hilo de JavaFX
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::initializeUI);
+        if (initialized) {
             return;
         }
 
+        this.lblTituloValue = new Label();
+        this.lblDescripcionValue = new Label();
+        this.tableComentarios = new TableView<>();
+
+        // Inicialización de la ventana (UI)
         stage = new Stage();
         stage.setTitle("Detalles de la Sugerencia");
 
         // Crear componentes de la UI
         Label lblTitulo = new Label("Detalles de la Sugerencia");
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+        // Agregar detalles de la sugerencia (título y descripción)
+        Label lblTituloSugerencia = new Label("Título: ");
+        Label lblDescripcionSugerencia = new Label("Descripción: ");
+
+        // Estas etiquetas se actualizarán dinámicamente
+        this.lblTituloValue = new Label();
+        this.lblDescripcionValue = new Label();
 
         // Crear tabla de comentarios
         tableComentarios = new TableView<>();
@@ -101,7 +126,8 @@ public class VentanaVerDetallesSugerencia {
         // Diseño de la ventana
         VBox vboxTop = new VBox(10);
         vboxTop.setPadding(new Insets(10));
-        vboxTop.getChildren().addAll(lblTitulo);
+        vboxTop.getChildren().addAll(lblTitulo, lblTituloSugerencia, lblTituloValue, lblDescripcionSugerencia,
+                lblDescripcionValue);
 
         VBox vboxBottom = new VBox(10);
         vboxBottom.setPadding(new Insets(10));
@@ -124,21 +150,44 @@ public class VentanaVerDetallesSugerencia {
      * @param control    El controlador asociado
      * @param sugerencia La sugerencia cuyos detalles se van a mostrar
      */
-    public void muestra(ControlVerDetallesSugerencia control, Sugerencia sugerencia) {
-        this.control = control;
-
-        // Asegurarse de que la UI se inicie en el hilo de JavaFX
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.muestra(control, sugerencia));
+    public void muestra(Sugerencia sugerencia) {
+        if (sugerencia == null) {
+            System.out.println("Error: No hay sugerencia seleccionada.");
             return;
         }
 
-        initializeUI(); // Inicializar la UI
+        this.sugerencia = sugerencia; // Asignar sugerencia al atributo de clase
 
-        // Cargar los comentarios de la sugerencia en la tabla
-        ObservableList<Comentario> data = FXCollections.observableArrayList(sugerencia.getComentarios());
-        tableComentarios.setItems(data);
+        System.out.println("Mostrando ventana de detalles para: " + sugerencia.getTitulo());
 
-        stage.show(); // Mostrar la ventana
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(() -> this.muestra(sugerencia));
+            return;
+        }
+
+        initializeUI();
+
+        lblTituloValue.setText(sugerencia.getTitulo());
+        lblDescripcionValue.setText(sugerencia.getDescripcionBreve());
+
+        actualizarComentarios(); // Asegurar que se cargan los comentarios de la sugerencia
+        stage.show();
     }
+
+    public void actualizarComentarios() {
+        if (!Platform.isFxApplicationThread()) {
+            Platform.runLater(this::actualizarComentarios);
+            return;
+        }
+
+        // Solo actualizar la tabla si hay comentarios
+        if (sugerencia != null && sugerencia.getComentarios() != null) {
+            ObservableList<Comentario> data = FXCollections.observableArrayList(sugerencia.getComentarios());
+
+            // Actualizar la tabla con los comentarios más recientes
+            tableComentarios.setItems(data);
+            tableComentarios.refresh(); // Forzar actualización visual
+        }
+    }
+
 }

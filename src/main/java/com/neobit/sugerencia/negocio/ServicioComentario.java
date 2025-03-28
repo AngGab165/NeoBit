@@ -44,4 +44,9 @@ public class ServicioComentario {
     public void eliminarComentario(Comentario comentario) {
         comentarioRepository.delete(comentario);
     }
+
+    public void guardar(Comentario comentario) {
+        // Guardar el comentario en la base de datos
+        comentarioRepository.save(comentario);
+    }
 }
