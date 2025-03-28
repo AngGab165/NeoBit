@@ -86,7 +86,7 @@ public class VentanaNotificacionesAdministrador {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDateTime fecha = LocalDateTime.parse(txtFecha.getText(), formatter);
                 if (!mensaje.isEmpty()) {
-                    control.agregaNotificacion(mensaje, fecha);
+                    control.agregaNotificacion(mensaje, fecha, null);
                     actualizarTabla();
                     txtMensaje.clear();
                     txtFecha.clear();
