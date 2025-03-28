@@ -3,7 +3,6 @@ package com.neobit.sugerencia.negocio.modelo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Notificaciones {
