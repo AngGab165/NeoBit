@@ -1,9 +1,12 @@
 package com.neobit.sugerencia.negocio.modelo;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 /**
@@ -17,9 +20,10 @@ public class Comentario {
 
     private String texto;
     private String autor;
-    private String fecha;
+    private LocalDateTime fecha;
 
     @ManyToOne
+    @JoinColumn(name = "sugerencia_id")
     private Sugerencia sugerencia;
 
     // Constructor vacío
@@ -51,11 +55,11 @@ public class Comentario {
         this.autor = autor;
     }
 
-    public String getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
 

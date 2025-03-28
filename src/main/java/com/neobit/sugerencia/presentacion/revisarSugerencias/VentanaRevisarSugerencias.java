@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.presentacion.revisarSugerencias;
 
+import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -46,10 +47,9 @@ public class VentanaRevisarSugerencias {
         stage = new Stage();
         stage.setTitle("Revisar Sugerencias");
 
-        // ComboBox de filtrado
         filtroComboBox = new ComboBox<>();
-        filtroComboBox.getItems().addAll("Todos", "Más recientes", "Más antiguos", "Pendiente", "Rechazados",
-                "Aprobados");
+        filtroComboBox.getItems().addAll("Todos", "Alta", "Media", "Baja", "Más recientes", "Más antiguos", "Pendiente",
+                "Rechazados", "Aprobados");
         filtroComboBox.setValue("Todos");
         filtroComboBox.setOnAction(e -> aplicarFiltro());
 
@@ -78,16 +78,20 @@ public class VentanaRevisarSugerencias {
         TableColumn<Sugerencia, String> columnaEstado = new TableColumn<>("Estado");
         columnaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
+        TableColumn<Sugerencia, Prioridad> prioridadColumn = new TableColumn<>("Prioridad");
+        prioridadColumn.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
+
         TableColumn<Sugerencia, Void> columnaAcciones = new TableColumn<>("Acciones");
         columnaAcciones.setCellFactory(param -> new TableCell<>() {
             private final ComboBox<String> comboEstado = new ComboBox<>();
             private final Button btnActualizar = new Button("Actualizar");
+            private final Button btnRecomendar = new Button("Recomendar");
             private final Button btnRetroalimentacion = new Button("Retroalimentación");
 
             {
                 comboEstado.getItems().addAll("Aprobada", "En espera", "Rechazada");
 
-                // Estilo del ComboBox y Botón
+                // Estilo del ComboBox y Botones
                 comboEstado.setStyle(
                         "-fx-background-color: #ffffff;" +
                                 "-fx-border-color: #006666;" +
@@ -95,6 +99,18 @@ public class VentanaRevisarSugerencias {
 
                 btnActualizar.setStyle(
                         "-fx-background-color: #006666;" +
+                                "-fx-text-fill: #ffffff;" +
+                                "-fx-padding: 5px 10px;" +
+                                "-fx-border-radius: 5px;");
+
+                btnRecomendar.setStyle(
+                        "-fx-background-color: #ff9900;" +
+                                "-fx-text-fill: #ffffff;" +
+                                "-fx-padding: 5px 10px;" +
+                                "-fx-border-radius: 5px;");
+
+                btnRetroalimentacion.setStyle(
+                        "-fx-background-color: #0099cc;" +
                                 "-fx-text-fill: #ffffff;" +
                                 "-fx-padding: 5px 10px;" +
                                 "-fx-border-radius: 5px;");
@@ -119,6 +135,18 @@ public class VentanaRevisarSugerencias {
                     }
                 });
 
+                btnRecomendar.setOnAction(e -> {
+                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
+                    Alert confirmacion = new Alert(Alert.AlertType.INFORMATION);
+                    confirmacion.setTitle("Recomendar Sugerencia");
+                    confirmacion.setHeaderText("Sugerencia recomendada");
+                    confirmacion.setContentText("Has recomendado la sugerencia: " + sugerencia.getTitulo());
+                    confirmacion.showAndWait();
+
+                    // Lógica para manejar la recomendación
+                    control.recomendarSugerencia(sugerencia.getId());
+                });
+
                 btnRetroalimentacion.setOnAction(e -> {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
                     mostrarVentanaRetroalimentacion(sugerencia);
@@ -133,19 +161,27 @@ public class VentanaRevisarSugerencias {
                 } else {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
                     comboEstado.setValue(sugerencia.getEstado()); // Muestra el estado actual
-                    HBox accionesBox = new HBox(5, comboEstado, btnActualizar, btnRetroalimentacion);
-                    accionesBox.setAlignment(Pos.CENTER);
+
+                    // Contenedor para los botones
+                    VBox botonesBox = new VBox(10, btnActualizar, btnRecomendar, btnRetroalimentacion); // Espaciado
+                                                                                                        // vertical
+                    botonesBox.setAlignment(Pos.CENTER);
+
+                    // Contenedor principal para el ComboBox y los botones
+                    HBox accionesBox = new HBox(20, comboEstado, botonesBox); // Espaciado horizontal
+                    accionesBox.setAlignment(Pos.CENTER_LEFT);
+
                     setGraphic(accionesBox);
                 }
             }
         });
 
         tablaSugerencias.getColumns().addAll(columnaId, columnaTitulo, descripcionColumn, autorColumn,
-                fechaCreacionColumn, ultimaActualizacionColumn, columnaEstado, columnaAcciones);
+                fechaCreacionColumn, ultimaActualizacionColumn, columnaEstado, prioridadColumn, columnaAcciones);
 
         // Datos
-        ObservableList<Sugerencia> datos = FXCollections.observableArrayList(sugerencias);
-        tablaSugerencias.setItems(datos);
+        sugerenciasOriginales = FXCollections.observableArrayList(sugerencias);
+        tablaSugerencias.setItems(sugerenciasOriginales);
 
         // Estilo general de la tabla
         tablaSugerencias.setStyle("-fx-background-color: #ffffff;");
@@ -179,12 +215,12 @@ public class VentanaRevisarSugerencias {
         switch (filtro) {
             case "Más recientes":
                 listaFiltrada = sugerenciasOriginales.stream()
-                        .sorted(Comparator.comparing(Sugerencia::getId).reversed())
+                        .sorted(Comparator.comparing(Sugerencia::getFechaCreacion).reversed())
                         .collect(Collectors.toList());
                 break;
             case "Más antiguos":
                 listaFiltrada = sugerenciasOriginales.stream()
-                        .sorted(Comparator.comparing(Sugerencia::getId))
+                        .sorted(Comparator.comparing(Sugerencia::getFechaCreacion))
                         .collect(Collectors.toList());
                 break;
             case "Pendiente":
@@ -202,6 +238,21 @@ public class VentanaRevisarSugerencias {
                         .filter(s -> "Aprobada".equals(s.getEstado()))
                         .collect(Collectors.toList());
                 break;
+            case "Alta":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> s.getPrioridad() == Prioridad.ALTA)
+                        .collect(Collectors.toList());
+                break;
+            case "Media":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> s.getPrioridad() == Prioridad.MEDIA)
+                        .collect(Collectors.toList());
+                break;
+            case "Baja":
+                listaFiltrada = sugerenciasOriginales.stream()
+                        .filter(s -> s.getPrioridad() == Prioridad.BAJA)
+                        .collect(Collectors.toList());
+                break;
             default:
                 listaFiltrada = sugerenciasOriginales;
                 break;
@@ -210,34 +261,24 @@ public class VentanaRevisarSugerencias {
         tablaSugerencias.setItems(FXCollections.observableArrayList(listaFiltrada));
     }
 
-    /**
-     * Muestra una ventana para enviar retroalimentación sobre una sugerencia.
-     *
-     * @param sugerencia La sugerencia a la que se le enviará la retroalimentación.
-     */
     private void mostrarVentanaRetroalimentacion(Sugerencia sugerencia) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Enviar Retroalimentación");
         alert.setHeaderText("Retroalimentación para: " + sugerencia.getTitulo());
 
-        // Crear un área de texto para la retroalimentación
         TextArea txtRetroalimentacion = new TextArea();
         txtRetroalimentacion.setPromptText("Escribe aquí la retroalimentación...");
         txtRetroalimentacion.setWrapText(true);
 
-        // Contenedor para el área de texto
         VBox content = new VBox(10, new Label("Escribe tu retroalimentación:"), txtRetroalimentacion);
         content.setPadding(new Insets(10));
 
-        // Agregar contenido al Alert
         alert.getDialogPane().setContent(content);
 
-        // Botones
         ButtonType enviarButton = new ButtonType("Enviar", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelarButton = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(enviarButton, cancelarButton);
 
-        // Mostrar ventana y obtener la respuesta del usuario
         alert.showAndWait().ifPresent(response -> {
             if (response == enviarButton) {
                 String retroalimentacion = txtRetroalimentacion.getText().trim();
@@ -254,5 +295,4 @@ public class VentanaRevisarSugerencias {
             }
         });
     }
-
 }

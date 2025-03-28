@@ -7,7 +7,7 @@ import com.neobit.sugerencia.datos.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +16,10 @@ public class ServicioNotificaciones {
 
     @Autowired
     private NotificacionesRepository repository;
+
+
+    public Notificaciones crearNotificacion(String mensaje, LocalDateTime fecha) {
+        Notificaciones notificacion = new Notificaciones(mensaje, fecha);
 
     @Autowired
     private EmpleadoRepository empleadoRepository; // Para obtener el Empleado
@@ -33,6 +37,7 @@ public class ServicioNotificaciones {
         notificacion.setFecha(fecha);
         notificacion.setEstado(estado);
         
+
         return repository.save(notificacion);
     }
 
@@ -48,7 +53,11 @@ public class ServicioNotificaciones {
         return repository.findById(id);
     }
 
+
+    public Notificaciones actualizarNotificacion(Long id, String mensaje, LocalDateTime fecha) {
+
     public Notificaciones marcarComoLeida(Long id) {
+
         return repository.findById(id).map(notificacion -> {
             notificacion.setEstado("LEÍDA");
             return repository.save(notificacion);

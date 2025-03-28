@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
@@ -92,15 +94,24 @@ public class VentanaSugerencias {
         TextField txtAutor = new TextField();
         txtAutor.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
 
+        Label lblPrioridad = new Label("Prioridad:");
+        lblPrioridad.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        ComboBox<Prioridad> comboPrioridad = new ComboBox<>();
+        comboPrioridad.getItems().addAll(Prioridad.values());
+        comboPrioridad.setPromptText("Selecciona una prioridad");
+        comboPrioridad.setValue(Prioridad.BAJA); // Valor por defecto
+        comboPrioridad.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
+
         Button btnAgregar = new Button("Agregar Sugerencia");
         btnAgregar.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         btnAgregar.setOnAction(e -> {
             String titulo = txtTitulo.getText();
             String descripcion = txtDescripcion.getText();
             String autor = txtAutor.getText();
+            Prioridad prioridad = comboPrioridad.getValue();
             LocalDate fechaCreacion = LocalDate.now();
             LocalDate ultimaActualizacion = LocalDate.now();
-            control.agregaSugerencia(titulo, descripcion, autor, fechaCreacion, ultimaActualizacion);
+            control.agregaSugerencia(titulo, descripcion, autor, ultimaActualizacion, fechaCreacion, prioridad);
             actualizarTabla();
         });
 
@@ -110,7 +121,9 @@ public class VentanaSugerencias {
         formPane.add(txtDescripcion, 1, 1);
         formPane.add(lblAutor, 0, 2);
         formPane.add(txtAutor, 1, 2);
-        formPane.add(btnAgregar, 1, 3);
+        formPane.add(lblPrioridad, 0, 3);
+        formPane.add(comboPrioridad, 1, 3);
+        formPane.add(btnAgregar, 1, 4);
 
         // Tabla de sugerencias
         tableSugerencias = new TableView<>();
@@ -135,6 +148,10 @@ public class VentanaSugerencias {
         TableColumn<Sugerencia, String> estadoColumn = new TableColumn<>("Estado");
         estadoColumn.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
+        TableColumn<Sugerencia, Prioridad> prioridadColumn = new TableColumn<>("Prioridad");
+        prioridadColumn.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
+        tableSugerencias.getColumns().add(prioridadColumn);
+
         TableColumn<Sugerencia, Void> accionesColumn = new TableColumn<>("Acciones");
         accionesColumn.setCellFactory(param -> new TableCell<Sugerencia, Void>() {
             private final Button btnVerDetalles = new Button("Ver Detalles");
@@ -143,7 +160,7 @@ public class VentanaSugerencias {
                 btnVerDetalles.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
                 btnVerDetalles.setOnAction(e -> {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
-                    ventanaVerDetalles.muestra(null, sugerencia);
+                    ventanaVerDetalles.muestra(sugerencia);
 
                 });
                 btnEliminar.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");

@@ -19,6 +19,9 @@ import com.neobit.sugerencia.presentacion.principal.ControlPrincipalAdministrado
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -80,15 +83,15 @@ public class VentanaNotificacionesAdministrador {
         btnAgregar.setOnAction(e -> {
             String mensaje = txtMensaje.getText();
             try {
-                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-                Date fecha = formato.parse(txtFecha.getText());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDateTime fecha = LocalDateTime.parse(txtFecha.getText(), formatter);
                 if (!mensaje.isEmpty()) {
                     control.agregaNotificacion(mensaje, fecha, null);
                     actualizarTabla();
                     txtMensaje.clear();
                     txtFecha.clear();
                 }
-            } catch (ParseException ex) {
+            } catch (DateTimeParseException ex) {
                 mostrarAlerta("Error", "Formato de fecha incorrecto. Usa el formato 'yyyy-MM-dd'.");
             }
         });

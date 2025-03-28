@@ -1,7 +1,8 @@
 package com.neobit.sugerencia.negocio.modelo;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Notificaciones {
@@ -18,15 +19,25 @@ public class Notificaciones {
     @JoinColumn(name = "empleado_id", nullable = false) // Enlace correcto con la FK
     private Empleado empleado;
 
+
+    private String destinatario;
+
+    private LocalDateTime fecha;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
+
 
     // Constructor vacío
     public Notificaciones() {
     }
 
     // Constructor completo
+
+    public Notificaciones(String mensaje, LocalDateTime fecha) {
+
     public Notificaciones(String mensaje, Date fecha, Empleado empleado) {
+
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.empleado = empleado;
@@ -57,6 +68,9 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
+
+    public LocalDateTime getFecha() {
+
     public String getEstado() {
         return estado;
     }
@@ -66,12 +80,23 @@ public class Notificaciones {
     }
 
     public Date getFecha() {
+
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
+
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String autor) {
+        this.destinatario = autor;
+    }
+}
 
     public Empleado getEmpleado() {
         return empleado;
@@ -81,4 +106,5 @@ public class Notificaciones {
         this.empleado = empleado;
     }
 }
+
 

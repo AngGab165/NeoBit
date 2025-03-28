@@ -6,7 +6,7 @@ import com.neobit.sugerencia.negocio.ServicioNotificaciones;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -18,6 +18,10 @@ public class ControlNotificaciones {
 
     @Autowired
     private NotificacionesRepository notificacionesRepository;
+
+
+    public void agregaNotificacion(String mensaje, LocalDateTime fecha) {
+        servicio.crearNotificacion(mensaje, fecha);
 
     public void crearNotificacionEjemplo() {
         String tipo = "APROBADA";
@@ -40,6 +44,7 @@ public class ControlNotificaciones {
 
     public void marcarComoLeida(Long idNotificacion) {
         servicioNotificaciones.marcarComoLeida(idNotificacion);
+
     }
 
     public List<Notificaciones> obtenerTodasLasNotificaciones() {
