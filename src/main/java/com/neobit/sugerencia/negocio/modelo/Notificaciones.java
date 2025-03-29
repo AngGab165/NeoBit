@@ -3,7 +3,6 @@ package com.neobit.sugerencia.negocio.modelo;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Notificaciones {
@@ -11,22 +10,29 @@ public class Notificaciones {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long empleadoId;
-
     private String mensaje;
 
     private String destinatario;
 
     private LocalDateTime fecha;
 
+    private String estado;
+
+    private String tipo;
+
+    @ManyToOne
+    @JoinColumn(name = "empleado_id", nullable = true)
+    private Empleado empleado;
+
     // Constructor vacío
     public Notificaciones() {
     }
 
     // Constructor completo
-    public Notificaciones(String mensaje, LocalDateTime fecha) {
+    public Notificaciones(String mensaje, LocalDateTime fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
+        this.empleado = empleado;
     }
 
     // Getters y Setters
@@ -38,12 +44,12 @@ public class Notificaciones {
         this.id = id;
     }
 
-    public Long getEmpleadoId() {
-        return empleadoId;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setEmpleadoId(Long empleadoId) {
-        this.empleadoId = empleadoId;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getMensaje() {
@@ -52,6 +58,14 @@ public class Notificaciones {
 
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public LocalDateTime getFecha() {
@@ -69,4 +83,13 @@ public class Notificaciones {
     public void setDestinatario(String autor) {
         this.destinatario = autor;
     }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
 }

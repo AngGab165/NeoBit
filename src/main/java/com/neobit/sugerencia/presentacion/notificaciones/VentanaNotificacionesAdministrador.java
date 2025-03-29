@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.presentacion.principal.ControlPrincipalAdministrador;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -83,16 +81,20 @@ public class VentanaNotificacionesAdministrador {
         btnAgregar.setOnAction(e -> {
             String mensaje = txtMensaje.getText();
             try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                // Usar DateTimeFormatter para analizar la fecha y la hora
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                // Parsear la fecha y hora proporcionada en el formato indicado
                 LocalDateTime fecha = LocalDateTime.parse(txtFecha.getText(), formatter);
+
                 if (!mensaje.isEmpty()) {
-                    control.agregaNotificacion(mensaje, fecha);
+                    // Llamada al método agregaNotificacion con mensaje y fecha
+                    control.agregaNotificacion(mensaje, fecha, null);
                     actualizarTabla();
                     txtMensaje.clear();
                     txtFecha.clear();
                 }
             } catch (DateTimeParseException ex) {
-                mostrarAlerta("Error", "Formato de fecha incorrecto. Usa el formato 'yyyy-MM-dd'.");
+                mostrarAlerta("Error", "Formato de fecha y hora incorrecto. Usa el formato 'yyyy-MM-dd HH:mm'.");
             }
         });
 

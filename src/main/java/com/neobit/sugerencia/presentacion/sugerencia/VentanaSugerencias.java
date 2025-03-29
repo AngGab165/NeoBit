@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
-import com.neobit.sugerencia.negocio.modelo.Usuario;
-import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.VentanaVerDetallesSugerencia;
 
 import java.time.LocalDate;

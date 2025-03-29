@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.negocio.modelo;
 
+//ya quedo
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

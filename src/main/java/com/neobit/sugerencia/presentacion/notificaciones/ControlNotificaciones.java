@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -15,12 +14,31 @@ public class ControlNotificaciones {
 
     @Autowired
     private ServicioNotificaciones servicio;
+    private ServicioNotificaciones servicioNotificaciones;
 
     @Autowired
     private NotificacionesRepository notificacionesRepository;
 
-    public void agregaNotificacion(String mensaje, LocalDateTime fecha) {
-        servicio.crearNotificacion(mensaje, fecha);
+    public void crearNotificacionEjemplo() {
+        String tipo = "APROBADA";
+        String mensaje = "Sugerencia aprobada";
+        LocalDateTime fecha = LocalDateTime.now(); // Fecha y hora actual
+        String estado = "NO LEÍDA";
+
+        servicioNotificaciones.crearNotificacion(null, tipo, mensaje, fecha, estado);
+    }
+
+    public void agregaNotificacion(String mensaje, LocalDateTime fecha, Long empleadoId) {
+        servicioNotificaciones.crearNotificacion(
+                empleadoId,
+                "ADMINISTRADOR", // Tipo de notificación
+                mensaje,
+                fecha,
+                "NO LEÍDA");
+    }
+
+    public void marcarComoLeida(Long idNotificacion) {
+        servicioNotificaciones.marcarComoLeida(idNotificacion);
     }
 
     public List<Notificaciones> obtenerTodasLasNotificaciones() {
@@ -35,5 +53,6 @@ public class ControlNotificaciones {
 
     public void eliminaNotificacion(Notificaciones notificacion) {
         servicio.eliminarNotificacion(notificacion.getId());
+        servicioNotificaciones.eliminarNotificacion(notificacion.getId());
     }
 }
