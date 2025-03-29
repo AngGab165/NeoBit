@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 public interface NotificacionesRepository extends JpaRepository<Notificaciones, Long> {
 
     List<Notificaciones> findByEmpleadoId(Long idEmpleado);
-
 }

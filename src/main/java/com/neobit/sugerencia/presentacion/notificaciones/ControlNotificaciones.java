@@ -22,7 +22,7 @@ public class ControlNotificaciones {
     public void crearNotificacionEjemplo() {
         String tipo = "APROBADA";
         String mensaje = "Sugerencia aprobada";
-        LocalDateTime fecha = LocalDateTime.now(); // Fecha y hora actual
+        LocalDateTime fecha = LocalDateTime.now();
         String estado = "NO LEÍDA";
 
         servicioNotificaciones.crearNotificacion(null, tipo, mensaje, fecha, estado);
@@ -48,7 +48,7 @@ public class ControlNotificaciones {
     public List<Notificaciones> obtenerNotificacionesPorEmpleado(Long idEmpleado) {
         // Aquí se asume que hay una relación en la base de datos entre 'Empleado' y
         // 'Notificaciones'.
-        return notificacionesRepository.findByEmpleadoId(idEmpleado); // Esto depende de tu implementación.
+        return notificacionesRepository.findByEmpleado_Id(idEmpleado); // Esto depende de tu implementación.
     }
 
     public void eliminaNotificacion(Notificaciones notificacion) {

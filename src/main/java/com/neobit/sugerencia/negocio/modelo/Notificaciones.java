@@ -8,18 +8,16 @@ import java.time.LocalDateTime;
 public class Notificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    private Long id; // Esto es la clave primaria correcta
 
     private String mensaje;
+    private String estado;
+    private String tipo;
 
     private String destinatario;
 
     private LocalDateTime fecha;
-
-    private String estado;
-
-    private String tipo;
-
     @ManyToOne
     @JoinColumn(name = "empleado_id", nullable = true)
     private Empleado empleado;
@@ -28,7 +26,6 @@ public class Notificaciones {
     public Notificaciones() {
     }
 
-    // Constructor completo
     public Notificaciones(String mensaje, LocalDateTime fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
@@ -60,16 +57,16 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
     public String getEstado() {
         return estado;
     }
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
     }
 
     public void setFecha(LocalDateTime fecha) {
