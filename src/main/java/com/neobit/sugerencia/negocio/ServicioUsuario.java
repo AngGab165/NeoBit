@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.neobit.sugerencia.datos.UsuarioRepository;
-import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 

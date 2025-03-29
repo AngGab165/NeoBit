@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.negocio.modelo;
 
+//ya quedo
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +19,27 @@ public class Sugerencia {
     private String autor;
     private String estado;
     private String estadoAnterior;
-    private LocalDate fechaCreacion;
-    private LocalDate ultimaActualizacion;
+    private String retroalimentacion;
+    private boolean recomendada;
 
-    @ManyToOne
-    @JoinColumn(name = "empleado_id", nullable = false)
-    private Empleado empleado;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Prioridad prioridad;
+
+    @Column(name = "FECHA_CREACION")
+    private LocalDate fechaCreacion;
+    @Column(name = "ULTIMA_ACTUALIZACION")
+    private LocalDate ultimaActualizacion;
 
     @OneToMany(mappedBy = "sugerencia", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comentario> comentarios = new ArrayList<>();
 
+    public Sugerencia() {
+    }
+
     // Constructor completo
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado,
-            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion,
-            Empleado empleado) {
+            String estadoAnterior, LocalDate fechaCreacion, LocalDate ultimaActualizacion, Prioridad prioridad) {
         this.titulo = titulo;
         this.descripcionBreve = descripcionBreve;
         this.autor = autor;
@@ -39,11 +47,11 @@ public class Sugerencia {
         this.estadoAnterior = estadoAnterior;
         this.fechaCreacion = fechaCreacion;
         this.ultimaActualizacion = ultimaActualizacion;
-        this.empleado = empleado;
+        this.prioridad = prioridad;
     }
 
     public Sugerencia(String titulo, String descripcionBreve, String autor, String estado, String estadoAnterior,
-            String fechaCreacion, String ultimaActualizacion, Object empleado, Object comentarios) {
+            String fechaCreacion, String ultimaActualizacion, Object comentarios) {
         this.titulo = titulo;
         this.descripcionBreve = descripcionBreve;
         this.autor = autor;
@@ -58,7 +66,7 @@ public class Sugerencia {
         // Empleado y comentarios se deben asignar correctamente dependiendo de su tipo.
         // Aquí supongo que son objetos.
         // Estos deberían ser instancias válidas, por lo que se haría algo como esto:
-        this.empleado = (Empleado) empleado; // Asegúrate de que el objeto empleado sea de tipo Empleado
+
         this.comentarios = (List<Comentario>) comentarios; // Asegúrate de que el objeto comentarios sea una lista de
                                                            // Comentario
     }
@@ -96,6 +104,14 @@ public class Sugerencia {
         this.autor = autor;
     }
 
+    public Prioridad getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(Prioridad prioridad) {
+        this.prioridad = prioridad;
+    }
+
     public String getEstado() {
         return estado;
     }
@@ -130,12 +146,12 @@ public class Sugerencia {
         this.ultimaActualizacion = ultimaActualizacion;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
+    public String getRetroalimentacion() {
+        return retroalimentacion;
     }
 
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
+    public void setRetroalimentacion(String retroalimentacion) {
+        this.retroalimentacion = retroalimentacion;
     }
 
     public List<Comentario> getComentarios() {
@@ -161,5 +177,13 @@ public class Sugerencia {
     public String toString() {
         return "Sugerencia [id=" + id + ", titulo=" + titulo + ", autor=" + autor
                 + ", estado=" + estado + ", comentarios=" + comentarios.size() + "]";
+    }
+
+    public boolean isRecomendada() {
+        return recomendada;
+    }
+
+    public void setRecomendada(boolean recomendada) {
+        this.recomendada = recomendada;
     }
 }

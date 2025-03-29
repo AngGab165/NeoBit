@@ -1,27 +1,35 @@
 package com.neobit.sugerencia.negocio.modelo;
 
 import jakarta.persistence.*;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 @Entity
 public class Notificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    private Long id; // Esto es la clave primaria correcta
 
     private String mensaje;
+    private String estado;
+    private String tipo;
 
-    @Temporal(TemporalType.DATE) // Corrección para manejar solo la fecha sin hora
-    private Date fecha;
+    private String destinatario;
+
+    private LocalDateTime fecha;
+    @ManyToOne
+    @JoinColumn(name = "empleado_id", nullable = true)
+    private Empleado empleado;
 
     // Constructor vacío
     public Notificaciones() {
     }
 
-    // Constructor completo
-    public Notificaciones(String mensaje, Date fecha) {
+    public Notificaciones(String mensaje, LocalDateTime fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
+        this.empleado = empleado;
     }
 
     // Getters y Setters
@@ -33,6 +41,14 @@ public class Notificaciones {
         this.id = id;
     }
 
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getMensaje() {
         return mensaje;
     }
@@ -41,11 +57,36 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
-    public Date getFecha() {
+    public LocalDateTime getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String autor) {
+        this.destinatario = autor;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
 }

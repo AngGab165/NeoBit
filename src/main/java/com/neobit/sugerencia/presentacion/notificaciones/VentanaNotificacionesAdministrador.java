@@ -12,25 +12,31 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
-import com.neobit.sugerencia.presentacion.principal.ControlPrincipalEmpleado;
+import com.neobit.sugerencia.presentacion.principal.ControlPrincipalAdministrador;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
 
 @Component
-public class VentanaNotificaciones {
+public class VentanaNotificacionesAdministrador {
 
     private Stage stage;
     private TableView<Notificaciones> tableNotificaciones;
     @Autowired
     private ControlNotificaciones control;
+    @Autowired
+    @Lazy
+    private ControlPrincipalAdministrador controlPrincipalAdministrador;
+
     private boolean initialized = false;
 
-    public VentanaNotificaciones() {
+    public VentanaNotificacionesAdministrador() {
         // Constructor vacío
     }
 
@@ -44,7 +50,7 @@ public class VentanaNotificaciones {
         }
 
         stage = new Stage();
-        stage.setTitle("Gestión de Notificaciones");
+        stage.setTitle("Gestión de Notificaciones (Administrador)");
 
         // Header
         Label lblTitulo = new Label("Gestión de Notificaciones");
@@ -75,16 +81,20 @@ public class VentanaNotificaciones {
         btnAgregar.setOnAction(e -> {
             String mensaje = txtMensaje.getText();
             try {
-                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-                Date fecha = formato.parse(txtFecha.getText());
+                // Usar DateTimeFormatter para analizar la fecha y la hora
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                // Parsear la fecha y hora proporcionada en el formato indicado
+                LocalDateTime fecha = LocalDateTime.parse(txtFecha.getText(), formatter);
+
                 if (!mensaje.isEmpty()) {
-                    control.agregaNotificacion(mensaje, fecha);
-                    actualizarTabla(); // Actualizar tabla automáticamente
+                    // Llamada al método agregaNotificacion con mensaje y fecha
+                    control.agregaNotificacion(mensaje, fecha, null);
+                    actualizarTabla();
                     txtMensaje.clear();
                     txtFecha.clear();
                 }
-            } catch (ParseException ex) {
-                mostrarAlerta("Error", "Formato de fecha incorrecto. Usa el formato 'yyyy-MM-dd'.");
+            } catch (DateTimeParseException ex) {
+                mostrarAlerta("Error", "Formato de fecha y hora incorrecto. Usa el formato 'yyyy-MM-dd HH:mm'.");
             }
         });
 
@@ -117,7 +127,7 @@ public class VentanaNotificaciones {
                 btnEliminar.setOnAction(e -> {
                     Notificaciones notificacion = getTableView().getItems().get(getIndex());
                     control.eliminaNotificacion(notificacion);
-                    actualizarTabla(); // Actualizar tabla tras eliminar
+                    actualizarTabla();
                 });
             }
 
@@ -147,29 +157,21 @@ public class VentanaNotificaciones {
         initialized = true;
     }
 
-    /**
-     * Muestra la ventana y carga las notificaciones
-     * 
-     * @param control        El controlador asociado
-     * @param notificaciones La lista de notificaciones a mostrar
-     */
-    public void muestra(ControlNotificaciones control, List<Notificaciones> notificaciones) {
-        this.control = control;
-
+    // ✅ Método para mostrar la ventana con el ControlNotificaciones
+    public void muestra(ControlPrincipalAdministrador controlPrincipalAdministrador) {
         if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> this.muestra(control, notificaciones));
+            Platform.runLater(() -> muestra(controlPrincipalAdministrador));
             return;
         }
 
+        // Asignar el control de notificaciones
+        this.control = controlPrincipalAdministrador.getControlNotificaciones();
         initializeUI();
-
-        ObservableList<Notificaciones> data = FXCollections.observableArrayList(notificaciones);
-        tableNotificaciones.setItems(data);
-
+        actualizarTabla();
         stage.show();
     }
 
-    // Método para actualizar la tabla
+    // Método para actualizar la tabla de notificaciones
     private void actualizarTabla() {
         List<Notificaciones> notificaciones = control.obtenerTodasLasNotificaciones();
         ObservableList<Notificaciones> data = FXCollections.observableArrayList(notificaciones);
@@ -183,33 +185,5 @@ public class VentanaNotificaciones {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    // Implementación del método muestra(ControlPrincipalEmpleado)
-    public void muestra(ControlPrincipalEmpleado controlPrincipalEmpleado) {
-        // Implementación para mostrar la ventana de notificaciones en el contexto de la
-        // ventana principal del empleado
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(() -> muestra(controlPrincipalEmpleado));
-            return;
-        }
-
-        // Llamamos al controlador de la ventana principal para cargar las
-        // notificaciones
-        List<Notificaciones> notificaciones = controlPrincipalEmpleado.obtenerNotificaciones();
-        this.muestra(controlPrincipalEmpleado.getControlNotificaciones(), notificaciones);
-    }
-
-    // Implementación del método muestra() sin argumentos
-    public void muestra() {
-        // Este método puede ser usado para mostrar la ventana sin pasar parámetros
-        if (!Platform.isFxApplicationThread()) {
-            Platform.runLater(this::muestra);
-            return;
-        }
-
-        // Se puede mostrar la ventana sin notificaciones inicialmente
-        List<Notificaciones> notificaciones = control.obtenerTodasLasNotificaciones();
-        this.muestra(control, notificaciones);
     }
 }
