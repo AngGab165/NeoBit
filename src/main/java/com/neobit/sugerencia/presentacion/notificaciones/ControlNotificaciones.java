@@ -48,7 +48,7 @@ public class ControlNotificaciones {
     public List<Notificaciones> obtenerNotificacionesPorEmpleado(Long idEmpleado) {
         // Aquí se asume que hay una relación en la base de datos entre 'Empleado' y
         // 'Notificaciones'.
-        return notificacionesRepository.findByEmpleado_Id(idEmpleado); // Esto depende de tu implementación.
+        return notificacionesRepository.findByEmpleadoId(idEmpleado); // Esto depende de tu implementación.
     }
 
     public void eliminaNotificacion(Notificaciones notificacion) {

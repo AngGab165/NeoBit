@@ -15,7 +15,8 @@ public class ServicioNotificaciones {
     @Autowired
     private NotificacionesRepository repository;
 
-    public Notificaciones crearNotificacion(String mensaje, LocalDateTime fecha) {
+    public Notificaciones crearNotificacion(Long empleadoId, String mensaje, String mensaje2, LocalDateTime fecha,
+            String estado) {
         Notificaciones notificacion = new Notificaciones(mensaje, fecha, null);
         return repository.save(notificacion);
     }
@@ -42,5 +43,12 @@ public class ServicioNotificaciones {
         } else {
             throw new IllegalArgumentException("La notificación con ID " + id + " no existe.");
         }
+    }
+
+    public Notificaciones marcarComoLeida(Long id) {
+        return repository.findById(id).map(notificacion -> {
+            notificacion.setEstado("LEÍDA");
+            return repository.save(notificacion);
+        }).orElseThrow(() -> new IllegalArgumentException("Notificación no encontrada"));
     }
 }
