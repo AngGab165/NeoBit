@@ -2,6 +2,7 @@ package com.neobit.sugerencia.negocio;
 
 import com.neobit.sugerencia.presentacion.login.VentanaLoginEmpleado;
 import com.neobit.sugerencia.presentacion.principal.VentanaAdministrador;
+import com.neobit.sugerencia.presentacion.usuarios.VentanaUsuarioEmpleado;
 import com.neobit.sugerencia.presentacion.login.VentanaLoginAdministrador;
 import com.neobit.sugerencia.presentacion.empleados.VentanaEmpleados;
 
@@ -17,6 +18,9 @@ public class ServicioVentanas {
     private final VentanaLoginAdministrador ventanaLoginAdministrador;
     private final VentanaEmpleados ventanaEmpleados;
     private final VentanaAdministrador ventanaAdministrador;
+
+    @Autowired
+    private VentanaUsuarioEmpleado ventanaUsuarioEmpleado;
 
     // Constructor para inyectar las dependencias
     public ServicioVentanas(VentanaLoginEmpleado ventanaLoginEmpleado,
@@ -40,6 +44,10 @@ public class ServicioVentanas {
 
     public void muestraVentanaEmpleados() {
         ventanaEmpleados.muestra();
+    }
+
+    public void muestraVentanaRegistroEmpleado() {
+        ventanaUsuarioEmpleado.muestra();
     }
 
     public void muestraVentanaAdministrador() {
