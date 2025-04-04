@@ -93,12 +93,21 @@ public class VentanaUsuarioEmpleado {
                     return;
                 }
 
+                // Verificar si el correo ya está registrado ANTES de intentar registrarlo
+                if (control.existeCorreo(correo)) {
+                    lblError.setText("El correo ya está en uso. Intente con otro.");
+                    return;
+                }
+
+                // Registrar usuario ya que el correo no está duplicado
                 control.registrarUsuarioEmpleado(nombre, correo, usuario, contrasena);
+
+                // Limpiar campos después del registro exitoso
                 txtNombre.clear();
                 txtCorreo.clear();
                 txtUsuario.clear();
                 txtContrasena.clear();
-                lblError.setText(""); // Limpiar errores
+                lblError.setText(""); // Limpiar mensaje de error
 
                 actualizarTabla();
             });

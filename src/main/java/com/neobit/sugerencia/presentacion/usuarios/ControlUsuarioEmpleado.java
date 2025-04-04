@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.datos.UsuarioRepository;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
+import com.neobit.sugerencia.negocio.ServicioUsuario;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 
 @Component
@@ -16,6 +17,9 @@ public class ControlUsuarioEmpleado {
 
     @Autowired
     private VentanaUsuarioEmpleado ventana;
+
+    @Autowired
+    private ServicioUsuario servicioUsuario;
 
     public void inicia() {
         ventana.muestra();
@@ -50,4 +54,9 @@ public class ControlUsuarioEmpleado {
     public List<Usuario> obtenerUsuarios() {
         return usuarioRepository.findAll(); // Recupera todos los usuarios de la base de datos
     }
+
+    public boolean existeCorreo(String correo) {
+        return servicioUsuario.existeCorreo(correo);
+    }
+
 }

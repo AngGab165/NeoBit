@@ -2,7 +2,6 @@ package com.neobit.sugerencia.negocio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.neobit.sugerencia.datos.UsuarioRepository;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
@@ -62,8 +61,12 @@ public class ServicioUsuario {
      *
      * @param usuario El usuario a registrar.
      */
-    public void registrarUsuario(Usuario usuario) {
+    public boolean registrarUsuario(Usuario usuario) {
+        if (existeCorreo(usuario.getCorreo())) {
+            return false; // Si el correo ya está en uso, no se registra el usuario
+        }
         usuarioRepository.save(usuario);
+        return true; // Registro exitoso
     }
 
     public boolean existeCorreo(String correo) {
