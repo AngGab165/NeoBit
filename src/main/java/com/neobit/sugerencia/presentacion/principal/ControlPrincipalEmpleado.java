@@ -1,7 +1,9 @@
 package com.neobit.sugerencia.presentacion.principal;
 
+import com.neobit.sugerencia.negocio.ServicioUsuario;
 import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
+import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.presentacion.empleados.VentanaEmpleados;
 import com.neobit.sugerencia.presentacion.sugerencia.ControlSugerencias;
 import com.neobit.sugerencia.presentacion.sugerencia.VentanaSugerencias;
@@ -106,5 +108,4 @@ public class ControlPrincipalEmpleado {
     public ControlNotificaciones getControlNotificaciones() {
         return controlNotificaciones;
     }
-
 }

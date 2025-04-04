@@ -6,6 +6,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,10 @@ public class VentanaRegistroEmpleado {
                 stage = new Stage();
                 stage.setTitle("Registro de Nuevo Empleado");
 
+                Label lblTitulo = new Label("Registrar Empleado");
+                lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+                lblTitulo.setStyle("-fx-text-fill: #006666;");
+
                 // Campos de registro
                 TextField txtNombre = new TextField();
                 txtNombre.setPromptText("Nombre");
@@ -48,7 +54,7 @@ public class VentanaRegistroEmpleado {
                             txtContrasena.getText());
                 });
 
-                VBox vbox = new VBox(15, txtNombre, txtCorreo, txtUsuario, txtContrasena, btnRegistrar);
+                VBox vbox = new VBox(15, lblTitulo, txtNombre, txtCorreo, txtUsuario, txtContrasena, btnRegistrar);
                 vbox.setAlignment(Pos.CENTER);
                 vbox.setPadding(new Insets(20));
                 vbox.setStyle("-fx-background-color: #eaf4f4;");

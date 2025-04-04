@@ -145,9 +145,18 @@ public class VentanaNotificacionesAdministrador {
         vboxMain.setPadding(new Insets(20));
         vboxMain.setAlignment(Pos.CENTER);
 
+        // Footer con derechos reservados
+        Label footerText = new Label("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
+        footerText.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+        HBox footer = new HBox(footerText);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(10));
+        footer.setStyle("-fx-background-color: #006666;");
+
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(header);
         borderPane.setCenter(vboxMain);
+        borderPane.setBottom(footer);
         borderPane.setStyle("-fx-background-color: #eaf4f4;");
 
         Scene scene = new Scene(borderPane, 800, 600);

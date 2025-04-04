@@ -9,6 +9,7 @@ import com.neobit.sugerencia.presentacion.revisarSugerencias.VentanaRevisarSuger
 import com.neobit.sugerencia.presentacion.empleados.ControlEmpleados;
 import com.neobit.sugerencia.presentacion.empleados.VentanaEmpleados;
 import com.neobit.sugerencia.negocio.ServicioUsuario; // Asegúrate de que el servicio de usuario esté importado
+import com.neobit.sugerencia.negocio.ServicioVentanas;
 
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,9 @@ public class ControlPrincipalAdministrador {
     private ServicioUsuario servicioUsuario; // Servicio para manejar el registro de usuarios
 
     @Autowired
+    private ServicioVentanas servicioVentanas;
+
+    @Autowired
     public ControlPrincipalAdministrador(ControlNotificaciones controlNotificaciones,
             @Lazy VentanaNotificacionesAdministrador ventanaNotificacionesAdministrador) {
         this.controlNotificaciones = controlNotificaciones;
@@ -60,6 +64,10 @@ public class ControlPrincipalAdministrador {
     public void muestraVentanaGestionEmpleados() {
         ventanaEmpleados.muestra(); // Llamar al método muestra()
                                     // en lugar de otros métodos
+    }
+
+    public void abrirRegistroEmpleado() {
+        servicioVentanas.muestraVentanaRegistroEmpleado();
     }
 
     // Método para mostrar la ventana de revisar sugerencias

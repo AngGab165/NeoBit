@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
@@ -73,8 +74,17 @@ public class VentanaNotificacionesEmpleado {
         vbox.setPadding(new Insets(20));
         vbox.setAlignment(Pos.CENTER);
 
+        // Footer con derechos reservados
+        Label footerText = new Label("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
+        footerText.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+        HBox footer = new HBox(footerText);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(10));
+        footer.setStyle("-fx-background-color: #006666;");
+
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(vbox);
+        borderPane.setBottom(footer);
         borderPane.setStyle("-fx-background-color: #eaf4f4;");
 
         Scene scene = new Scene(borderPane, 800, 500); // Aumentado el tamaño para más columnas
