@@ -1,6 +1,6 @@
 package com.neobit.sugerencia.presentacion.sugerencia;
 
-//Documentacion
+// Importaciones necesarias
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,6 +38,7 @@ public class VentanaSugerencias {
 
     private Stage stage;
     private TableView<Sugerencia> tableSugerencias;
+    private Label contadorSugerenciasLabel; // Etiqueta para mostrar el contador
     @Autowired
     @Lazy
     private ControlSugerencias control;
@@ -56,6 +57,7 @@ public class VentanaSugerencias {
     /**
      * Inicializa los componentes UI directamente
      */
+    @SuppressWarnings("unchecked")
     public void initializeUI() {
         if (initialized) {
             return;
@@ -72,6 +74,10 @@ public class VentanaSugerencias {
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
         header.setStyle("-fx-background-color: #F0F0F0;");
+
+        // Contador de sugerencias
+        contadorSugerenciasLabel = new Label("Total de sugerencias enviadas: 0");
+        contadorSugerenciasLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #333333;");
 
         // Formulario para agregar sugerencia
         GridPane formPane = new GridPane();
@@ -187,7 +193,7 @@ public class VentanaSugerencias {
                 fechaCreacionColumn, ultimaActualizacionColumn, estadoColumn, accionesColumn);
 
         // Layout
-        VBox vboxMain = new VBox(20, formPane, tableSugerencias);
+        VBox vboxMain = new VBox(20, contadorSugerenciasLabel, formPane, tableSugerencias);
         vboxMain.setPadding(new Insets(20));
         vboxMain.setAlignment(Pos.CENTER);
 
@@ -226,6 +232,9 @@ public class VentanaSugerencias {
         ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
         tableSugerencias.setItems(data);
 
+        // Actualizar el contador
+        contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
+
         stage.show();
     }
 
@@ -234,6 +243,9 @@ public class VentanaSugerencias {
             List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
             ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
             tableSugerencias.setItems(data);
+
+            // Actualizar el contador
+            contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
         }
     }
 
@@ -246,6 +258,9 @@ public class VentanaSugerencias {
             List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
             ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
             tableSugerencias.setItems(data);
+
+            // Actualizar el contador
+            contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
         }
 
         stage.show();
@@ -254,4 +269,8 @@ public class VentanaSugerencias {
     public void mostrar() {
         muestra();
     }
-}
+    public void actualizarContador(int total) {
+        contadorSugerenciasLabel.setText("Total de sugerencias: " + total);
+    }
+
+} 
