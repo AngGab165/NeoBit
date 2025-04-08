@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//si
 @Component
 public class VentanaRevisarSugerencias {
 
@@ -191,8 +192,20 @@ public class VentanaRevisarSugerencias {
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: #eaf4f4;");
 
+        Label footerText = new Label("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
+        footerText.setStyle("-fx-text-fill: white; -fx-font-size: 12px;");
+        HBox footer = new HBox(footerText);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(10));
+        footer.setStyle("-fx-background-color: #006666;");
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(layout);
+        borderPane.setBottom(footer);
+        borderPane.setStyle("-fx-background-color: #eaf4f4;");
+
         // Escena
-        Scene escena = new Scene(layout, 800, 600);
+        Scene escena = new Scene(borderPane, 800, 600);
         stage.setScene(escena);
         stage.show();
 

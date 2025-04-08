@@ -8,36 +8,25 @@ import java.time.LocalDateTime;
 public class Notificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Esto es la clave primaria correcta
+
+    private Long id; // Esto es la clave primaria correcta
 
     private String mensaje;
     private String estado;
     private String tipo;
 
-    // Relación con Empleado (destinatario)
-    @ManyToOne
-    @JoinColumn(name = "empleado_id", nullable = false) // Enlace correcto con la FK
-    private Empleado empleado;
-
-
     private String destinatario;
 
     private LocalDateTime fecha;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fecha;
-
+    @ManyToOne
+    @JoinColumn(name = "empleado_id", nullable = true)
+    private Empleado empleado;
 
     // Constructor vacío
     public Notificaciones() {
     }
 
-    // Constructor completo
-
-    public Notificaciones(String mensaje, LocalDateTime fecha) {
-
-    public Notificaciones(String mensaje, Date fecha, Empleado empleado) {
-
+    public Notificaciones(String mensaje, LocalDateTime fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.empleado = empleado;
@@ -68,8 +57,9 @@ public class Notificaciones {
         this.mensaje = mensaje;
     }
 
-
     public LocalDateTime getFecha() {
+        return fecha;
+    }
 
     public String getEstado() {
         return estado;
@@ -79,15 +69,9 @@ public class Notificaciones {
         this.estado = estado;
     }
 
-    public Date getFecha() {
-
-        return fecha;
-    }
-
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
     }
-
 
     public String getDestinatario() {
         return destinatario;
@@ -96,7 +80,6 @@ public class Notificaciones {
     public void setDestinatario(String autor) {
         this.destinatario = autor;
     }
-}
 
     public Empleado getEmpleado() {
         return empleado;
@@ -105,6 +88,5 @@ public class Notificaciones {
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
     }
+
 }
-
-

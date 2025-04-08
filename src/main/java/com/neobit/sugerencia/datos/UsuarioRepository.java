@@ -1,8 +1,10 @@
 package com.neobit.sugerencia.datos;
 
 import com.neobit.sugerencia.negocio.modelo.Empleado;
+import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +25,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Usuario findByUsuario(String usuario);
 
     Optional<Usuario> findByUsuarioAndContrasena(String usuario, String contrasena);
+
+    List<Usuario> findByRol(Rol empleado);
 }

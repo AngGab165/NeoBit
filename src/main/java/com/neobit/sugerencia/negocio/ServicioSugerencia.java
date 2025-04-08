@@ -105,10 +105,11 @@ public class ServicioSugerencia {
      */
     @Transactional
     public void enviarNotificacion(String autor, String mensaje) {
-        Notificaciones notificacion = new Notificaciones();
+        Notificaciones notificacion = new Notificaciones(); // Cambié a la clase correcta
         notificacion.setDestinatario(autor);
         notificacion.setMensaje(mensaje);
         notificacion.setFecha(LocalDateTime.now());
-        notificacionRepository.save(notificacion);
+
+        notificacionRepository.save(notificacion); // Cambié el método a `save`
     }
 }

@@ -1,6 +1,6 @@
 package com.neobit.sugerencia.presentacion.sugerencia;
 
-//Documentacion
+// Importaciones necesarias
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,7 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,6 @@ import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
-import com.neobit.sugerencia.negocio.modelo.Usuario;
-import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.VentanaVerDetallesSugerencia;
 
 import java.time.LocalDate;
@@ -38,6 +38,7 @@ public class VentanaSugerencias {
 
     private Stage stage;
     private TableView<Sugerencia> tableSugerencias;
+    private Label contadorSugerenciasLabel; // Etiqueta para mostrar el contador
     @Autowired
     @Lazy
     private ControlSugerencias control;
@@ -56,6 +57,7 @@ public class VentanaSugerencias {
     /**
      * Inicializa los componentes UI directamente
      */
+    @SuppressWarnings("unchecked")
     public void initializeUI() {
         if (initialized) {
             return;
@@ -67,11 +69,15 @@ public class VentanaSugerencias {
 
         // Header
         Label lblTitulo = new Label("Gestión de Sugerencias");
-        lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+        lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #006666;");
         VBox header = new VBox(10, lblTitulo);
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
         header.setStyle("-fx-background-color: #F0F0F0;");
+
+        // Contador de sugerencias
+        contadorSugerenciasLabel = new Label("Total de sugerencias enviadas: 0");
+        contadorSugerenciasLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #333333;");
 
         // Formulario para agregar sugerencia
         GridPane formPane = new GridPane();
@@ -80,27 +86,27 @@ public class VentanaSugerencias {
         formPane.setVgap(10);
 
         Label lblTituloSugerencia = new Label("Título:");
-        lblTituloSugerencia.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        lblTituloSugerencia.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
         TextField txtTitulo = new TextField();
-        txtTitulo.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
+        txtTitulo.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #006666;");
 
         Label lblDescripcion = new Label("Descripción Breve:");
-        lblDescripcion.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        lblDescripcion.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
         TextField txtDescripcion = new TextField();
-        txtDescripcion.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
+        txtDescripcion.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #006666;");
 
         Label lblAutor = new Label("Autor:");
-        lblAutor.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        lblAutor.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
         TextField txtAutor = new TextField();
-        txtAutor.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
+        txtAutor.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #006666;");
 
         Label lblPrioridad = new Label("Prioridad:");
-        lblPrioridad.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333;");
+        lblPrioridad.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
         ComboBox<Prioridad> comboPrioridad = new ComboBox<>();
         comboPrioridad.getItems().addAll(Prioridad.values());
         comboPrioridad.setPromptText("Selecciona una prioridad");
         comboPrioridad.setValue(Prioridad.BAJA); // Valor por defecto
-        comboPrioridad.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #ccc;");
+        comboPrioridad.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #006666;");
 
         Button btnAgregar = new Button("Agregar Sugerencia");
         btnAgregar.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
@@ -127,6 +133,7 @@ public class VentanaSugerencias {
 
         // Tabla de sugerencias
         tableSugerencias = new TableView<>();
+        tableSugerencias.setStyle("-fx-border-color: #006666;");
         TableColumn<Sugerencia, Long> idColumn = new TableColumn<>("ID");
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
@@ -186,13 +193,22 @@ public class VentanaSugerencias {
                 fechaCreacionColumn, ultimaActualizacionColumn, estadoColumn, accionesColumn);
 
         // Layout
-        VBox vboxMain = new VBox(20, formPane, tableSugerencias);
+        VBox vboxMain = new VBox(20, contadorSugerenciasLabel, formPane, tableSugerencias);
         vboxMain.setPadding(new Insets(20));
         vboxMain.setAlignment(Pos.CENTER);
+
+        // Footer con derechos reservados
+        Text footerText = new Text("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
+        footerText.setStyle("-fx-fill: white; -fx-font-size: 12px;");
+        HBox footer = new HBox(footerText);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(10));
+        footer.setStyle("-fx-background-color: #006666;");
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(header);
         borderPane.setCenter(vboxMain);
+        borderPane.setBottom(footer);
 
         Scene scene = new Scene(borderPane, 800, 600);
         stage.setScene(scene);
@@ -216,6 +232,9 @@ public class VentanaSugerencias {
         ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
         tableSugerencias.setItems(data);
 
+        // Actualizar el contador
+        contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
+
         stage.show();
     }
 
@@ -224,6 +243,9 @@ public class VentanaSugerencias {
             List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
             ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
             tableSugerencias.setItems(data);
+
+            // Actualizar el contador
+            contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
         }
     }
 
@@ -236,6 +258,9 @@ public class VentanaSugerencias {
             List<Sugerencia> sugerencias = control.obtenerTodasLasSugerencias();
             ObservableList<Sugerencia> data = FXCollections.observableArrayList(sugerencias);
             tableSugerencias.setItems(data);
+
+            // Actualizar el contador
+            contadorSugerenciasLabel.setText("Total de sugerencias: " + sugerencias.size());
         }
 
         stage.show();
@@ -244,4 +269,8 @@ public class VentanaSugerencias {
     public void mostrar() {
         muestra();
     }
-}
+    public void actualizarContador(int total) {
+        contadorSugerenciasLabel.setText("Total de sugerencias: " + total);
+    }
+
+} 

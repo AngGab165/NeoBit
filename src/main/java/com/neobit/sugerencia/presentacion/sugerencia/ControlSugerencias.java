@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.ServicioSugerencia;
-import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,6 +24,7 @@ public class ControlSugerencias {
     public void inicia() {
         List<Sugerencia> sugerencias = servicioSugerencia.recuperaSugerencias();
         ventana.muestra(this, sugerencias);
+        actualizarContador(sugerencias.size()); // Actualiza el contador al iniciar
     }
 
     /**
@@ -34,17 +33,17 @@ public class ControlSugerencias {
      * @param titulo              El título de la sugerencia
      * @param descripcion         La descripción breve de la sugerencia
      * @param autor               El autor de la sugerencia
-     * @param ultimaActualizacion
-     * @param fechaCreacion
+     * @param fechaCreacion       La fecha de creación de la sugerencia
+     * @param ultimaActualizacion La última fecha de actualización de la sugerencia
+     * @param prioridad           La prioridad de la sugerencia
      */
     public void agregaSugerencia(String titulo, String descripcion, String autor,
             LocalDate fechaCreacion, LocalDate ultimaActualizacion, Prioridad prioridad) {
-        // Aquí se asigna el empleado al crear la sugerencia
         Sugerencia sugerencia = new Sugerencia(titulo, descripcion, autor, "Pendiente", "", fechaCreacion,
-                ultimaActualizacion, prioridad); // Asignación del empleado
+                ultimaActualizacion, prioridad);
         servicioSugerencia.agregaSugerencia(sugerencia);
         ventana.actualizarTabla();
-        inicia();
+        inicia(); // Recarga la tabla y el contador
     }
 
     /**
@@ -54,10 +53,24 @@ public class ControlSugerencias {
      */
     public void eliminaSugerencia(Sugerencia sugerencia) {
         servicioSugerencia.eliminaSugerencia(sugerencia);
-        inicia();
+        inicia(); // Recarga la tabla y el contador
     }
 
+    /**
+     * Obtiene todas las sugerencias
+     * 
+     * @return Lista de sugerencias
+     */
     public List<Sugerencia> obtenerTodasLasSugerencias() {
         return servicioSugerencia.recuperaSugerencias();
+    }
+
+    /**
+     * Actualiza el contador de sugerencias en la ventana
+     * 
+     * @param total El número total de sugerencias
+     */
+    private void actualizarContador(int total) {
+        ventana.actualizarContador(total); // Llama al método de la ventana para actualizar el contador
     }
 }

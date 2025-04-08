@@ -13,6 +13,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 @Component
@@ -37,16 +39,24 @@ public class VentanaLoginEmpleado extends Application {
         this.stage = primaryStage;
         stage.setTitle("Login Empleado");
 
+        Label lblTitulo = new Label("Iniciar Sesión");
+        lblTitulo.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        lblTitulo.setStyle("-fx-text-fill: #006666;");
         // Inicializar los componentes
         tfUsuario = new TextField();
         tfUsuario.setPromptText("Ingrese su usuario");
+        estilizarCampo(tfUsuario);
 
         pfClave = new PasswordField();
         pfClave.setPromptText("Ingrese su contraseña");
+        estilizarCampo(pfClave);
 
         Button btnLogin = new Button("Iniciar sesión");
+        estilizarBoton(btnLogin, "#006666");
         Button btnRecuperarContrasena = new Button("Recuperar Contraseña");
+        estilizarBoton(btnRecuperarContrasena, "#0099cc");
         Button btnRegistrarse = new Button("Registrarse");
+        estilizarBoton(btnRegistrarse, "#0099cc");
 
         // Acción al hacer clic en el botón de login
         btnLogin.setOnAction(e -> loginEmpleado(tfUsuario.getText(), pfClave.getText()));
@@ -58,12 +68,12 @@ public class VentanaLoginEmpleado extends Application {
         btnRegistrarse.setOnAction(e -> mostrarFormularioRegistro());
 
         // Diseño de la ventana con VBox
-        VBox vbox = new VBox(10, tfUsuario, pfClave, btnLogin, btnRecuperarContrasena, btnRegistrarse);
+        VBox vbox = new VBox(15, lblTitulo, tfUsuario, pfClave, btnLogin, btnRecuperarContrasena, btnRegistrarse);
         vbox.setAlignment(Pos.CENTER);
-        vbox.setStyle("-fx-padding: 20; -fx-background-color: #f0f0f0;");
+        vbox.setStyle("-fx-background-color: #eaf4f4;");
 
         // Crear la escena y asignar la vista
-        Scene scene = new Scene(vbox, 300, 200);
+        Scene scene = new Scene(vbox, 400, 350);
         stage.setScene(scene);
         stage.show();
     }
@@ -80,6 +90,7 @@ public class VentanaLoginEmpleado extends Application {
         if (empleado != null && empleado.getContrasena().equals(contrasena)) {
             mostrarMensajeExito("Login exitoso.");
             cerrar(); // Cierra la ventana de login
+            ventanaPrincipalEmpleado.setUsuario(empleado);
             // Aquí podrías abrir la ventana principal del empleado
             ventanaPrincipalEmpleado.mostrar();
         } else {
@@ -135,5 +146,14 @@ public class VentanaLoginEmpleado extends Application {
     public void muestra() {
         Stage stage = new Stage();
         start(stage);
+    }
+
+    private void estilizarCampo(TextField campo) {
+        campo.setStyle("-fx-border-color: #006666; -fx-background-color: #ffffff; -fx-text-fill: #006666;");
+    }
+
+    private void estilizarBoton(Button boton, String color) {
+        boton.setStyle("-fx-background-color: " + color
+                + "; -fx-text-fill: #ffffff; -fx-padding: 7px 15px; -fx-border-radius: 5px;");
     }
 }
