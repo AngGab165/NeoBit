@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.ServicioUsuario;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
+import com.neobit.sugerencia.presentacion.principal.ControlPrincipalAdministrador;
 import com.neobit.sugerencia.presentacion.principal.VentanaPrincipalAdministrador;
 
 import javafx.application.Application;
@@ -31,6 +32,10 @@ public class VentanaLoginAdministrador extends Application {
     @Autowired
     @Lazy
     private VentanaPrincipalAdministrador ventanaPrincipalAdministrador;
+
+    @Autowired
+    @Lazy
+    private ControlPrincipalAdministrador controlPrincipalAdministrador;
 
     private Stage stage;
     private TextField tfUsuario;
@@ -84,6 +89,7 @@ public class VentanaLoginAdministrador extends Application {
         if (admin != null && admin.getContrasena().equals(contrasena) && admin.getRol() == Rol.ADMINISTRADOR) {
             mostrarMensajeExito("Login exitoso.");
             cerrar();
+            controlPrincipalAdministrador.setNombreAdministrador(admin.getNombre());
             ventanaPrincipalAdministrador.setUsuario(admin);
             ventanaPrincipalAdministrador.mostrar();
         } else {
