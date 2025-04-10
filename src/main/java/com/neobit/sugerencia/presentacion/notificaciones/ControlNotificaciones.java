@@ -19,6 +19,24 @@ public class ControlNotificaciones {
     @Autowired
     private NotificacionesRepository notificacionesRepository;
 
+    // Método modificado para aceptar lista de empleados
+    public void enviarNotificaciones(List<Long> idsEmpleados, String mensaje, LocalDateTime fecha) {
+        for (Long idEmpleado : idsEmpleados) {
+            try {
+                servicio.crearNotificacion(
+                    idEmpleado, 
+                    "ADMINISTRADOR", 
+                    mensaje, 
+                    fecha, 
+                    "NO LEÍDA"
+                );
+            } catch (Exception e) {
+                System.err.println("Error al enviar notificación al empleado ID: " + idEmpleado);
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void crearNotificacionEjemplo() {
         String tipo = "APROBADA";
         String mensaje = "Sugerencia aprobada";
@@ -37,6 +55,7 @@ public class ControlNotificaciones {
                 "NO LEÍDA");
     }
 
+    
     public void marcarComoLeida(Long idNotificacion) {
         servicioNotificaciones.marcarComoLeida(idNotificacion);
     }
@@ -56,3 +75,5 @@ public class ControlNotificaciones {
         servicioNotificaciones.eliminarNotificacion(notificacion.getId());
     }
 }
+
+    
