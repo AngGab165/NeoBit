@@ -27,4 +27,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsuarioAndContrasena(String usuario, String contrasena);
 
     List<Usuario> findByRol(Rol empleado);
+
 }

@@ -16,14 +16,21 @@ public class ServicioComentario {
     @Autowired
     ComentarioRepository comentarioRepository;
 
+    private String nombreEmpleado;
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
     /**
      * Agrega un nuevo comentario a una sugerencia
      * 
      * @param sugerencia La sugerencia a la que se va a agregar el comentario
      * @param comentario El comentario a agregar
      */
-    public void agregarComentario(Sugerencia sugerencia, Comentario comentario) {
+    public void agregarComentario(Sugerencia sugerencia, Comentario comentario, String nombreEmpleado) {
         comentario.setSugerencia(sugerencia);
+        comentario.setAutor(nombreEmpleado);
         comentarioRepository.save(comentario);
     }
 

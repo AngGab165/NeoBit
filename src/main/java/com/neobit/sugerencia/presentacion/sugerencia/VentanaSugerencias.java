@@ -46,6 +46,8 @@ public class VentanaSugerencias {
     private VentanaVerDetallesSugerencia ventanaVerDetalles;
     private boolean initialized = false;
 
+    private String nombreEmpleado;
+
     /**
      * Constructor sin inicializar UI
      */
@@ -190,6 +192,7 @@ public class VentanaSugerencias {
         VBox vboxMain = new VBox(20, formPane, tableSugerencias);
         vboxMain.setPadding(new Insets(20));
         vboxMain.setAlignment(Pos.CENTER);
+        vboxMain.setStyle("-fx-background-color: #eaf4f4;");
 
         // Footer con derechos reservados
         Text footerText = new Text("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
@@ -253,5 +256,9 @@ public class VentanaSugerencias {
 
     public void mostrar() {
         muestra();
+    }
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
     }
 }

@@ -47,6 +47,12 @@ public class ControlPrincipalEmpleado {
     @Autowired
     private ControlNotificaciones controlNotificaciones;
 
+    private String nombreEmpleado;
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
     // Inicia la aplicación y muestra la ventana principal
     public void inicia(Stage primaryStage) {
         ventanaPrincipalEmpleado.setControl(this); // Asegúrate de que esta clase tenga el método setControl
@@ -60,7 +66,11 @@ public class ControlPrincipalEmpleado {
 
     // Muestra la ventana para gestionar sugerencias
     public void muestraVentanaSugerencias() {
-        controlSugerencias.inicia(); // Asegúrate de que ControlSugerencias tenga el método inicia()
+        if (nombreEmpleado != null) {
+            ventanaRevisarSugerencias.setNombreAdministrador(nombreEmpleado); // Pasamos el nombre al controlador
+                                                                              // de esa ventana
+        }
+        ventanaRevisarSugerencias.muestra(); // Mostrar la ventana
     }
 
     // Muestra la ventana para gestionar notificaciones
