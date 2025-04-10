@@ -44,6 +44,7 @@ public class VentanaVerDetallesSugerencia {
 
     public void setNombreEmpleado(String nombreEmpleado) {
         this.nombreEmpleado = nombreEmpleado;
+        System.out.println("NombreEmpleado establecido en VentanaVerDetallesSugerencia: " + nombreEmpleado);
     }
 
     /**
@@ -108,7 +109,7 @@ public class VentanaVerDetallesSugerencia {
         // Configurar columnas
         TableColumn<Comentario, String> autorColumn = new TableColumn<>("Autor");
         autorColumn.setCellValueFactory(new PropertyValueFactory<>("autor"));
-        autorColumn.setPrefWidth(150);
+        autorColumn.setPrefWidth(170);
 
         TableColumn<Comentario, String> fechaColumn = new TableColumn<>("Fecha");
         fechaColumn.setCellValueFactory(new PropertyValueFactory<>("fecha"));
@@ -131,6 +132,7 @@ public class VentanaVerDetallesSugerencia {
             String textoComentario = txtNuevoComentario.getText();
             if (textoComentario != null && textoComentario.length() >= 5) {
                 control.setSugerencia(sugerencia);
+                System.out.println("Agregando comentario con nombreEmpleado: " + nombreEmpleado);
                 control.setNombreEmpleado(nombreEmpleado); // Cambia esto según el contexto
                 control.agregarComentario(textoComentario, nombreEmpleado); // Agregar comentario usando el controlador
 

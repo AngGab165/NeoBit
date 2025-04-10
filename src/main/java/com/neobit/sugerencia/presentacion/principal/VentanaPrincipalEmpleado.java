@@ -47,6 +47,7 @@ public class VentanaPrincipalEmpleado extends Application {
         Button btnGestionSugerencias = new Button("Gestionar Sugerencias");
         estilizarBoton(btnGestionSugerencias, "#006666");
         btnGestionSugerencias.setOnAction(e -> {
+            System.out.println("Abriendo VentanaSugerencias con nombre: " + usuario.getNombre());
             ventanaSugerencias.setNombreEmpleado(usuario.getNombre()); // Pasa el nombre del empleado
             ventanaSugerencias.mostrar();
         });

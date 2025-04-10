@@ -2,6 +2,8 @@ package com.neobit.sugerencia.presentacion.login;
 
 import com.neobit.sugerencia.negocio.ServicioLoginEmpleado;
 import com.neobit.sugerencia.negocio.modelo.Empleado;
+import com.neobit.sugerencia.negocio.modelo.Rol;
+import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
 import com.neobit.sugerencia.presentacion.principal.VentanaPrincipalEmpleado;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,11 @@ public class ControlLoginEmpleado {
         if (loginValido) {
 
             nombreEmpleado = servicioLoginEmpleado.obtenerNombreEmpleado(usuario);
+            System.out.println("Nombre del empleado establecido en ControlLoginEmpleado: " + nombreEmpleado);
+            Usuario usuarioLogueado = new Usuario(); // Suponiendo que tienes un constructor adecuado
+            usuarioLogueado.setNombre(nombreEmpleado);
+            usuarioLogueado.setRol(Rol.EMPLEADO); // Asignar el rol correspondiente
+            ventanaPrincipalEmpleado.setUsuario(usuarioLogueado);
 
             // Aquí ya está guardado el nombre del autor, entonces podemos proceder con el
             // login

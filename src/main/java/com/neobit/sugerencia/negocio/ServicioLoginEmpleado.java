@@ -46,11 +46,13 @@ public class ServicioLoginEmpleado {
     }
 
     public String obtenerNombreEmpleado(String usuario) {
-        Usuario usuarioLogueado = usuarioRepository.findByUsuario(usuario); // Busca el usuario por nombre
-        if (usuarioLogueado != null && usuarioLogueado.getRol().equals("empleado")) { // Verifica si es un empleado
-            return usuarioLogueado.getNombre(); // Retorna el nombre del empleado
+        Usuario usuarioLogueado = usuarioRepository.findByUsuario(usuario);
+        if (usuarioLogueado != null && usuarioLogueado.getRol().equals("empleado")) {
+            System.out.println("Nombre encontrado en ServicioLoginEmpleado: " + usuarioLogueado.getNombre());
+            return usuarioLogueado.getNombre();
         }
-        return null; // Si no es un empleado o no se encuentra
+        System.out.println("No se encontró empleado para usuario: " + usuario);
+        return null;
     }
 
 }

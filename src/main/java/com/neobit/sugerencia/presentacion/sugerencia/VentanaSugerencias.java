@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 
 import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
+import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.VentanaVerDetallesSugerencia;
 
 import java.time.LocalDate;
@@ -46,6 +47,10 @@ public class VentanaSugerencias {
     @Lazy
     private VentanaVerDetallesSugerencia ventanaVerDetalles;
     private boolean initialized = false;
+
+    @Autowired
+    @Lazy
+    private ControlVerDetallesSugerencia controlVerDetalles;
 
     private String nombreEmpleado;
 
@@ -169,7 +174,10 @@ public class VentanaSugerencias {
                 btnVerDetalles.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
                 btnVerDetalles.setOnAction(e -> {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
-                    ventanaVerDetalles.muestra(sugerencia);
+                    System.out.println(
+                            "Antes de abrir detalles - NombreEmpleado en VentanaSugerencias: " + nombreEmpleado);
+                    controlVerDetalles.setNombreEmpleado(nombreEmpleado); // Pasar el nombre del empleado
+                    controlVerDetalles.inicia(sugerencia); // Abrir ventana de detalles
 
                 });
                 btnEliminar.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
@@ -271,15 +279,15 @@ public class VentanaSugerencias {
 
     public void mostrar() {
         muestra();
+
     }
 
     public void setNombreEmpleado(String nombreEmpleado) {
         this.nombreEmpleado = nombreEmpleado;
     }
 
-
     public void actualizarContador(int total) {
         contadorSugerenciasLabel.setText("Total de sugerencias: " + total);
     }
 
-} 
+}
