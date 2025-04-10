@@ -38,6 +38,7 @@ public class ControlVerDetallesSugerencia {
      */
     public void inicia(Sugerencia sugerencia) {
         this.sugerencia = sugerencia;
+        ventana.setNombreEmpleado(nombreEmpleado);
         ventana.muestra(sugerencia);
     }
 
@@ -45,10 +46,9 @@ public class ControlVerDetallesSugerencia {
      * Agrega un nuevo comentario a la sugerencia
      * 
      * @param textoComentario El texto del nuevo comentario
-     * @param nombreEmpleado2
-     * @param nombreEmpleado2
+     * @param nombreEmpleado  El nombre del empleado que realiza el comentario
      */
-    public void agregarComentario(String textoComentario, String nombreEmpleado) {
+    public void agregarComentario(String textoComentario, String nombreEmpleadoParam) {
         if (sugerencia == null) {
             System.out.println("Error: No hay sugerencia seleccionada.");
             return;
@@ -60,11 +60,12 @@ public class ControlVerDetallesSugerencia {
             comentario.setFecha(LocalDateTime.now());
             comentario.setSugerencia(sugerencia);
 
-            comentario.setAutor(nombreEmpleado); // Asignar el nombre del empleado al comentario
-
+            comentario.setAutor(this.nombreEmpleado != null ? this.nombreEmpleado : nombreEmpleadoParam);
+            comentario.setAutor(nombreEmpleado);
+            System.out.println("Autor asignado al comentario: " + nombreEmpleado);
             servicioComentario.guardar(comentario);
 
-            System.out.println("Comentario guardado: " + comentario.getTexto());
+            System.out.println("Comentario guardado: " + comentario.getTexto() + " por " + comentario.getAutor());
 
             Platform.runLater(() -> {
                 sugerencia.getComentarios().add(comentario);
