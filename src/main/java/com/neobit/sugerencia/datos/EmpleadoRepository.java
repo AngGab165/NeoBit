@@ -17,6 +17,3 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
 
     Empleado findByCorreo(String correo);
 }
-
-
-

@@ -1,6 +1,10 @@
 package com.neobit.sugerencia.presentacion.login;
 
 import com.neobit.sugerencia.negocio.ServicioLoginEmpleado;
+import com.neobit.sugerencia.negocio.modelo.Empleado;
+import com.neobit.sugerencia.negocio.modelo.Rol;
+import com.neobit.sugerencia.negocio.modelo.Usuario;
+import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
 import com.neobit.sugerencia.presentacion.principal.VentanaPrincipalEmpleado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -8,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ControlLoginEmpleado {
-
-    private static String autorActual;
 
     @Autowired
     private VentanaLoginEmpleado ventanaLoginEmpleado;
@@ -20,6 +22,8 @@ public class ControlLoginEmpleado {
     @Autowired
     @Lazy
     private VentanaPrincipalEmpleado ventanaPrincipalEmpleado;
+
+    private static String nombreEmpleado;
 
     /**
      * Realiza el login del empleado.
@@ -35,6 +39,16 @@ public class ControlLoginEmpleado {
 
         boolean loginValido = servicioLoginEmpleado.validarLogin(usuario, contrasena);
         if (loginValido) {
+
+            nombreEmpleado = servicioLoginEmpleado.obtenerNombreEmpleado(usuario);
+            System.out.println("Nombre del empleado establecido en ControlLoginEmpleado: " + nombreEmpleado);
+            Usuario usuarioLogueado = new Usuario(); // Suponiendo que tienes un constructor adecuado
+            usuarioLogueado.setNombre(nombreEmpleado);
+            usuarioLogueado.setRol(Rol.EMPLEADO); // Asignar el rol correspondiente
+            ventanaPrincipalEmpleado.setUsuario(usuarioLogueado);
+
+            // Aquí ya está guardado el nombre del autor, entonces podemos proceder con el
+            // login
             ventanaLoginEmpleado.cerrar();
             ventanaPrincipalEmpleado.mostrar();
         } else {
@@ -83,12 +97,8 @@ public class ControlLoginEmpleado {
         }
     }
 
-    public static void setAutorActual(String nombreEmpleado) {
-        autorActual = nombreEmpleado; // Asignar el nombre del empleado a la variable estática
-    }
-
-    public static String getAutorActual() {
-        return autorActual; // Obtener el nombre del autor
+    public static String getNombreEmpleado() {
+        return nombreEmpleado;
     }
 
     /**

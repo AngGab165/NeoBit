@@ -20,6 +20,12 @@ public class ControlRevisarSugerencias {
     @Autowired
     private VentanaRevisarSugerencias ventanaRevisarSugerencias;
 
+    private String nombreAdministrador;
+
+    public void setNombreAdministrador(String nombreAdministrador) {
+        this.nombreAdministrador = nombreAdministrador;
+    }
+
     /**
      * Inicia el caso de uso de revisión de sugerencias
      */
@@ -126,6 +132,14 @@ public class ControlRevisarSugerencias {
 
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo recomendar la sugerencia: " + e.getMessage(), AlertType.ERROR);
+        }
+    }
+
+    public void guardarComentario(Long idSugerencia, String comentario) {
+        if (nombreAdministrador != null && !nombreAdministrador.isEmpty()) {
+            servicioSugerencia.agregarComentario(idSugerencia, comentario, nombreAdministrador);
+        } else {
+            System.out.println("Nombre del administrador no establecido.");
         }
     }
 
