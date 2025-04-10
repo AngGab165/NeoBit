@@ -168,7 +168,7 @@ public class VentanaVerDetallesSugerencia {
         borderPane.setCenter(new VBox(10, vboxTop, tableComentarios));
         borderPane.setBottom(new VBox(vboxBottom, footer));
 
-        Scene scene = new Scene(borderPane, 800, 800);
+        Scene scene = new Scene(borderPane, 800, 600);
         stage.setScene(scene);
 
         initialized = true;
