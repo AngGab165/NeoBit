@@ -1,5 +1,8 @@
 package com.neobit.sugerencia.presentacion.notificaciones;
 
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,11 +15,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.presentacion.principal.ControlPrincipalEmpleado;
+
+
 
 import java.util.List;
 
@@ -29,8 +33,8 @@ public class VentanaNotificacionesEmpleado {
     @Autowired
     private ControlPrincipalEmpleado control;
 
-    public void initializeUI() {
-        if (!Platform.isFxApplicationThread()) {
+        public void initializeUI() {
+            if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
@@ -58,7 +62,10 @@ public class VentanaNotificacionesEmpleado {
         TableColumn<Notificaciones, String> estadoColumn = new TableColumn<>("Estado");
         estadoColumn.setCellValueFactory(new PropertyValueFactory<>("estado"));
 
-        tableNotificaciones.getColumns().addAll(tipoColumn, mensajeColumn, fechaColumn, estadoColumn);
+        tableNotificaciones.getColumns().add(tipoColumn);
+        tableNotificaciones.getColumns().add(mensajeColumn);
+        tableNotificaciones.getColumns().add(fechaColumn);
+        tableNotificaciones.getColumns().add(estadoColumn);
 
         // Botón para marcar como leída
         Button btnMarcarLeida = new Button("Marcar como leída");
@@ -91,17 +98,25 @@ public class VentanaNotificacionesEmpleado {
         stage.setScene(scene);
     }
 
-    public void muestra() {
-        initializeUI();
-        actualizarTabla();
-        stage.show();
-    }
-
-    public void actualizarTabla() {
-        if (control.getEmpleadoActual() == null) {
-            System.out.println("Advertencia: No hay empleado actual. No se pueden cargar notificaciones.");
-            return; // No intenta cargar notificaciones si no hay empleado
+        private void configurarActualizacionAutomatica() {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> actualizarTabla()));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
         }
+
+        // Modificar el método muestra()
+        public void muestra() {
+            initializeUI();
+            actualizarTabla();
+            configurarActualizacionAutomatica(); // Agregar esta línea
+            stage.show();
+        }
+
+        public void actualizarTabla() {
+            if (control.getEmpleadoActual() == null) {
+                System.out.println("Advertencia: No hay empleado actual. No se pueden cargar notificaciones.");
+                return; // No intenta cargar notificaciones si no hay empleado
+            }
 
         Long idEmpleado = control.getEmpleadoActual().getId();
         List<Notificaciones> notificaciones = control.getControlNotificaciones()
@@ -111,3 +126,4 @@ public class VentanaNotificacionesEmpleado {
         tableNotificaciones.setItems(data);
     }
 }
+

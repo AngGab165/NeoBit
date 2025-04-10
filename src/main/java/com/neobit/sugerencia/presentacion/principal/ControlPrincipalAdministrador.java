@@ -87,7 +87,7 @@ public class ControlPrincipalAdministrador {
 
     // Muestra la ventana para gestionar notificaciones
     public void muestraVentanaNotificacionesAdministrador() {
-        ventanaNotificaciones.muestra(this); // Asegúrate de que VentanaNotificaciones tenga el método muestra()
+        ventanaNotificaciones.muestra(); // Asegúrate de que VentanaNotificaciones tenga el método muestra()
     }
 
     /**
