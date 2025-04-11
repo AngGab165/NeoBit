@@ -1,6 +1,5 @@
 package com.neobit.sugerencia.presentacion.sugerencia;
 
-
 // Importaciones necesarias
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -38,7 +37,7 @@ import java.util.List;
 @Component
 public class VentanaSugerencias {
 
-   private Stage stage;
+    private Stage stage;
     private TableView<Sugerencia> tableSugerencias;
     private Label contadorSugerenciasLabel; // Etiqueta para mostrar el contador
     @Autowired
@@ -78,9 +77,7 @@ public class VentanaSugerencias {
         // Header
         Label lblTitulo = new Label("Gestión de Sugerencias");
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #006666;");
-        lblContador = new Label("Total de sugerencias: 0"); // Inicializar el contador
-        lblContador.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
-        VBox header = new VBox(10, lblTitulo, lblContador);
+        VBox header = new VBox(10, lblTitulo);
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
         header.setStyle("-fx-background-color: #F0F0F0;");
@@ -177,7 +174,10 @@ public class VentanaSugerencias {
                 btnVerDetalles.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
                 btnVerDetalles.setOnAction(e -> {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
-                    ventanaVerDetalles.muestra(sugerencia);
+                    System.out.println(
+                            "Antes de abrir detalles - NombreEmpleado en VentanaSugerencias: " + nombreEmpleado);
+                    controlVerDetalles.setNombreEmpleado(nombreEmpleado); // Pasar el nombre del empleado
+                    controlVerDetalles.inicia(sugerencia); // Abrir ventana de detalles
 
                 });
                 btnEliminar.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
@@ -201,6 +201,7 @@ public class VentanaSugerencias {
 
         tableSugerencias.getColumns().addAll(idColumn, tituloColumn, descripcionColumn, autorColumn,
                 fechaCreacionColumn, ultimaActualizacionColumn, estadoColumn, accionesColumn);
+
         // Layout
         VBox vboxMain = new VBox(20, contadorSugerenciasLabel, formPane, tableSugerencias);
         vboxMain.setPadding(new Insets(20));
@@ -227,20 +228,6 @@ public class VentanaSugerencias {
         initialized = true;
     }
 
-    /**
-     * Actualiza el contador de sugerencias en la interfaz gráfica.
-     * 
-     * @param total El número total de sugerencias
-     */
-    public void actualizarContador(int total) {
-        if (lblContador != null) {
-            lblContador.setText("Total de sugerencias: " + total);
-        } else {
-            System.out.println("Total de sugerencias: " + total);
-        }
-    }
-
-    // Otros métodos existentes...
     /**
      * Muestra la ventana y carga las sugerencias
      * 

@@ -31,8 +31,10 @@ public class ProyectoApplication {
         public void start(Stage primaryStage) {
             // Aquí se puede configurar JavaFX, ya que Spring ya está inicializado
             Platform.runLater(() -> {
-                // Aquí puedes acceder a cualquier bean de Spring y realizar la configuración de JavaFX
-                 MyController controller = applicationContext.getBean(MyController.class);
+                // Aquí puedes acceder a cualquier bean de Spring y realizar la configuración de
+                // JavaFX
+                // Ejemplo: Obteniendo un controlador desde Spring
+                MyController controller = applicationContext.getBean(MyController.class);
                 controller.initialize(primaryStage);
             });
         }
