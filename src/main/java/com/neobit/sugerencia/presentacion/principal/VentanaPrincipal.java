@@ -1,6 +1,5 @@
 package com.neobit.sugerencia.presentacion.principal;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,11 +9,16 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.neobit.sugerencia.presentacion.VentanaForo; // Importación de VentanaForo
+
 @Component
 public class VentanaPrincipal {
 
     @Autowired
     private ControlPrincipal controlPrincipal;
+
+    @Autowired
+    private VentanaForo ventanaForo; // Inyección de la ventana del foro
 
     public void setControl(ControlPrincipal controlPrincipal) {
         this.controlPrincipal = controlPrincipal;
@@ -37,14 +41,21 @@ public class VentanaPrincipal {
                         "-fx-padding: 10px 20px; -fx-border-radius: 5px;");
         btnAdministrador.setOnAction(e -> controlPrincipal.muestraLoginAdministrador());
 
+        // Botón para acceder al foro interno
+        Button btnForo = new Button("Foro Interno");
+        btnForo.setStyle(
+                "-fx-background-color: #006666; -fx-text-fill: white; -fx-font-size: 14px; " +
+                        "-fx-padding: 10px 20px; -fx-border-radius: 5px;");
+        btnForo.setOnAction(e -> ventanaForo.mostrar()); // Abre la ventana del foro
+
         // Diseño de la ventana
-        VBox vbox = new VBox(20, btnEmpleado, btnAdministrador);
+        VBox vbox = new VBox(20, btnEmpleado, btnAdministrador, btnForo); // Agregar el botón del foro al VBox
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-background-color: #eaf4f4;");
 
         // Crear la escena y configurar la ventana
-        Scene scene = new Scene(vbox, 300, 250);
+        Scene scene = new Scene(vbox, 300, 300); // Ajustar el tamaño de la ventana
         primaryStage.setScene(scene);
         primaryStage.show();
     }

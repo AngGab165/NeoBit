@@ -1,6 +1,6 @@
 package com.neobit.sugerencia.presentacion.sugerencia;
 
-//Documentacion
+// Documentación
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,6 +38,7 @@ public class VentanaSugerencias {
 
     private Stage stage;
     private TableView<Sugerencia> tableSugerencias;
+    private Label lblContador; // Etiqueta para mostrar el contador
     @Autowired
     @Lazy
     private ControlSugerencias control;
@@ -68,7 +69,9 @@ public class VentanaSugerencias {
         // Header
         Label lblTitulo = new Label("Gestión de Sugerencias");
         lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #006666;");
-        VBox header = new VBox(10, lblTitulo);
+        lblContador = new Label("Total de sugerencias: 0"); // Inicializar el contador
+        lblContador.setStyle("-fx-font-size: 14px; -fx-text-fill: #006666;");
+        VBox header = new VBox(10, lblTitulo, lblContador);
         header.setAlignment(Pos.CENTER);
         header.setPadding(new Insets(20));
         header.setStyle("-fx-background-color: #F0F0F0;");
@@ -153,39 +156,6 @@ public class VentanaSugerencias {
         prioridadColumn.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
         tableSugerencias.getColumns().add(prioridadColumn);
 
-        TableColumn<Sugerencia, Void> accionesColumn = new TableColumn<>("Acciones");
-        accionesColumn.setCellFactory(param -> new TableCell<Sugerencia, Void>() {
-            private final Button btnVerDetalles = new Button("Ver Detalles");
-            private final Button btnEliminar = new Button("Eliminar");
-            {
-                btnVerDetalles.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
-                btnVerDetalles.setOnAction(e -> {
-                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
-                    ventanaVerDetalles.muestra(sugerencia);
-
-                });
-                btnEliminar.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
-                btnEliminar.setOnAction(e -> {
-                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
-                    control.eliminaSugerencia(sugerencia);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    VBox vbox = new VBox(5, btnVerDetalles, btnEliminar);
-                    setGraphic(vbox);
-                }
-            }
-        });
-
-        tableSugerencias.getColumns().addAll(idColumn, tituloColumn, descripcionColumn, autorColumn,
-                fechaCreacionColumn, ultimaActualizacionColumn, estadoColumn, accionesColumn);
-
         // Layout
         VBox vboxMain = new VBox(20, formPane, tableSugerencias);
         vboxMain.setPadding(new Insets(20));
@@ -211,6 +181,20 @@ public class VentanaSugerencias {
         initialized = true;
     }
 
+    /**
+     * Actualiza el contador de sugerencias en la interfaz gráfica.
+     * 
+     * @param total El número total de sugerencias
+     */
+    public void actualizarContador(int total) {
+        if (lblContador != null) {
+            lblContador.setText("Total de sugerencias: " + total);
+        } else {
+            System.out.println("Total de sugerencias: " + total);
+        }
+    }
+
+    // Otros métodos existentes...
     /**
      * Muestra la ventana y carga las sugerencias
      * 

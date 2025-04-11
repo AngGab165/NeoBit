@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.negocio;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.neobit.sugerencia.datos.NotificacionesRepository;
 import com.neobit.sugerencia.datos.SugerenciaRepository;
+import com.neobit.sugerencia.negocio.modelo.Comentario;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 
@@ -111,5 +113,20 @@ public class ServicioSugerencia {
         notificacion.setFecha(LocalDateTime.now());
 
         notificacionRepository.save(notificacion); // Cambié el método a `save`
+    }
+
+    public void agregarComentario(Long idSugerencia, String comentario, String autor) {
+        Sugerencia sugerencia = buscaSugerenciaPorId(idSugerencia);
+        if (sugerencia != null) {
+            Comentario nuevoComentario = new Comentario();
+            nuevoComentario.setTexto(comentario);
+            nuevoComentario.setAutor(autor);
+            nuevoComentario.setFecha(LocalDateTime.now()); // Asignar la fecha actual al comentario
+            nuevoComentario.setSugerencia(sugerencia); // Asignar la sugerencia al comentario
+            sugerencia.getComentarios().add(nuevoComentario); // Agregar el comentario a la lista de comentarios
+            actualizaSugerencia(sugerencia); // Guardar la sugerencia con el nuevo comentario
+        } else {
+            throw new IllegalArgumentException("No se encontró la sugerencia con ID: " + idSugerencia);
+        }
     }
 }
