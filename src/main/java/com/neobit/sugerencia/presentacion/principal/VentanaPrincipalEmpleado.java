@@ -46,7 +46,11 @@ public class VentanaPrincipalEmpleado extends Application {
         // Opciones para el empleado
         Button btnGestionSugerencias = new Button("Gestionar Sugerencias");
         estilizarBoton(btnGestionSugerencias, "#006666");
-        btnGestionSugerencias.setOnAction(e -> ventanaSugerencias.mostrar());
+        btnGestionSugerencias.setOnAction(e -> {
+            System.out.println("Abriendo VentanaSugerencias con nombre: " + usuario.getNombre());
+            ventanaSugerencias.setNombreEmpleado(usuario.getNombre()); // Pasa el nombre del empleado
+            ventanaSugerencias.mostrar();
+        });
 
         Button btnGestionNotificaciones = new Button("Gestionar Notificaciones");
         estilizarBoton(btnGestionNotificaciones, "#006666");
@@ -69,7 +73,7 @@ public class VentanaPrincipalEmpleado extends Application {
     }
 
     // Método para actualizar el mensaje de bienvenida con el nombre solo si es un
-    // administrador
+    // empleado
     private void actualizarBienvenida() {
         if (lblBienvenido != null) {
             if (usuario != null) {

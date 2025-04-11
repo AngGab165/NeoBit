@@ -48,6 +48,12 @@ public class ControlPrincipalAdministrador {
     @Autowired
     private ServicioVentanas servicioVentanas;
 
+    private String nombreAdministrador;
+
+    public void setNombreAdministrador(String nombreAdministrador) {
+        this.nombreAdministrador = nombreAdministrador;
+    }
+
     @Autowired
     public ControlPrincipalAdministrador(ControlNotificaciones controlNotificaciones,
             @Lazy VentanaNotificacionesAdministrador ventanaNotificacionesAdministrador) {
@@ -72,12 +78,16 @@ public class ControlPrincipalAdministrador {
 
     // Método para mostrar la ventana de revisar sugerencias
     public void muestraVentanaRevisarSugerencias() {
-        ventanaRevisarSugerencias.muestra(); // Llamar al método muestra() en lugar de otros métodos
+        if (nombreAdministrador != null) {
+            ventanaRevisarSugerencias.setNombreAdministrador(nombreAdministrador); // Pasamos el nombre al controlador
+                                                                                   // de esa ventana
+        }
+        ventanaRevisarSugerencias.muestra(); // Mostrar la ventana
     }
 
     // Muestra la ventana para gestionar notificaciones
     public void muestraVentanaNotificacionesAdministrador() {
-        ventanaNotificaciones.muestra(this); // Asegúrate de que VentanaNotificaciones tenga el método muestra()
+        ventanaNotificaciones.muestra(); // Asegúrate de que VentanaNotificaciones tenga el método muestra()
     }
 
     /**

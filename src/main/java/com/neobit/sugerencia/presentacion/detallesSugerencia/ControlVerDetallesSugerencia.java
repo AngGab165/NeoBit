@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.ServicioComentario;
 import com.neobit.sugerencia.negocio.modelo.Comentario;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
+import com.neobit.sugerencia.presentacion.login.ControlLoginEmpleado;
 
 import javafx.application.Platform;
 
@@ -24,6 +25,12 @@ public class ControlVerDetallesSugerencia {
 
     private Sugerencia sugerencia;
 
+    private String nombreEmpleado;
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+
     /**
      * Inicia el caso de uso
      * 
@@ -31,6 +38,7 @@ public class ControlVerDetallesSugerencia {
      */
     public void inicia(Sugerencia sugerencia) {
         this.sugerencia = sugerencia;
+        ventana.setNombreEmpleado(nombreEmpleado);
         ventana.muestra(sugerencia);
     }
 
@@ -38,30 +46,43 @@ public class ControlVerDetallesSugerencia {
      * Agrega un nuevo comentario a la sugerencia
      * 
      * @param textoComentario El texto del nuevo comentario
+     * @param nombreEmpleado  El nombre del empleado que realiza el comentario
      */
-    public void agregarComentario(String textoComentario) {
+    public void agregarComentario(String textoComentario, String nombreEmpleadoParam) {
         if (sugerencia == null) {
             System.out.println("Error: No hay sugerencia seleccionada.");
             return;
         }
 
-        // Crear un nuevo comentario con solo el texto
-        Comentario comentario = new Comentario();
-        comentario.setTexto(textoComentario); // Solo se guarda el texto
-        comentario.setFecha(LocalDateTime.now()); // Fecha actual
-        comentario.setSugerencia(sugerencia); // Asociamos la sugerencia
+        try {
+            Comentario comentario = new Comentario();
+            comentario.setTexto(textoComentario);
+            comentario.setFecha(LocalDateTime.now());
+            comentario.setSugerencia(sugerencia);
 
-        // Guardar el comentario en la base de datos
-        servicioComentario.guardar(comentario);
+            comentario.setAutor(this.nombreEmpleado != null ? this.nombreEmpleado : nombreEmpleadoParam);
+            comentario.setAutor(nombreEmpleado);
+            System.out.println("Autor asignado al comentario: " + nombreEmpleado);
+            servicioComentario.guardar(comentario);
 
-        System.out.println("Comentario guardado: " + comentario.getTexto());
+            System.out.println("Comentario guardado: " + comentario.getTexto() + " por " + comentario.getAutor());
 
-        // Actualizar la lista de comentarios en la UI
-        Platform.runLater(() -> {
-            sugerencia.getComentarios().add(comentario);
-            // Suponiendo que `ventana` tiene un método `actualizarComentarios`
-            ventana.actualizarComentarios();
-        });
+            Platform.runLater(() -> {
+                sugerencia.getComentarios().add(comentario);
+                ventana.actualizarComentarios();
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace(); // Ver el error exacto
+            System.out.println("Error al guardar el comentario: " + ex.getMessage());
+        }
     }
 
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setSugerencia(Sugerencia sugerencia) {
+        this.sugerencia = sugerencia;
+    }
 }

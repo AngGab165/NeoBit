@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.negocio;
 
+import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.datos.NotificacionesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,22 @@ public class ServicioNotificaciones {
     @Autowired
     private NotificacionesRepository repository;
 
-    public Notificaciones crearNotificacion(Long empleadoId, String mensaje, String mensaje2, LocalDateTime fecha,
-            String estado) {
-        Notificaciones notificacion = new Notificaciones(mensaje, fecha, null);
+    @Autowired
+    private ServicioEmpleado servicioEmpleado;
+    public Notificaciones crearNotificacion(Long empleadoId, String tipo, String mensaje, LocalDateTime fecha, String estado) {
+        Notificaciones notificacion = new Notificaciones();
+        notificacion.setMensaje(mensaje);
+        notificacion.setTipo(tipo);
+        notificacion.setFecha(fecha);
+        notificacion.setEstado(estado);
+        
+        if (empleadoId != null) {
+            Empleado empleado = servicioEmpleado.encuentraEmpleadoPorId(empleadoId);
+            if (empleado != null) {
+                notificacion.setEmpleado(empleado);
+            }
+        }
+        
         return repository.save(notificacion);
     }
 

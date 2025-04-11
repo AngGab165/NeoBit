@@ -19,6 +19,11 @@ public class Empleado {
     private String usuario;
     private String clave;
 
+    //Constructor vacío requerido por JPA
+    public Empleado() {
+    }
+
+    // Constructor con nombre y correo
     public Empleado(String nombre, String correo) {
         this.nombre = nombre;
         this.correo = correo;

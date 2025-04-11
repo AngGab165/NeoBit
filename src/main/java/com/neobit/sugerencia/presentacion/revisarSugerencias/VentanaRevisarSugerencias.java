@@ -33,6 +33,11 @@ public class VentanaRevisarSugerencias {
     private ControlRevisarSugerencias control;
     private ObservableList<Sugerencia> sugerenciasOriginales;
     private ComboBox<String> filtroComboBox;
+    private String nombreAdministrador;
+
+    public void setNombreAdministrador(String nombreAdministrador) {
+        this.nombreAdministrador = nombreAdministrador;
+    }
 
     /**
      * Muestra la ventana con la lista de sugerencias.
@@ -88,6 +93,7 @@ public class VentanaRevisarSugerencias {
             private final Button btnActualizar = new Button("Actualizar");
             private final Button btnRecomendar = new Button("Recomendar");
             private final Button btnRetroalimentacion = new Button("Retroalimentación");
+            private final Button btnComentario = new Button("Comentario");
 
             {
                 comboEstado.getItems().addAll("Aprobada", "En espera", "Rechazada");
@@ -112,6 +118,12 @@ public class VentanaRevisarSugerencias {
 
                 btnRetroalimentacion.setStyle(
                         "-fx-background-color: #0099cc;" +
+                                "-fx-text-fill: #ffffff;" +
+                                "-fx-padding: 5px 10px;" +
+                                "-fx-border-radius: 5px;");
+
+                btnComentario.setStyle(
+                        "-fx-background-color: #339966;" +
                                 "-fx-text-fill: #ffffff;" +
                                 "-fx-padding: 5px 10px;" +
                                 "-fx-border-radius: 5px;");
@@ -152,6 +164,11 @@ public class VentanaRevisarSugerencias {
                     Sugerencia sugerencia = getTableView().getItems().get(getIndex());
                     mostrarVentanaRetroalimentacion(sugerencia);
                 });
+
+                btnComentario.setOnAction(e -> {
+                    Sugerencia sugerencia = getTableView().getItems().get(getIndex());
+                    mostrarVentanaComentario(sugerencia);
+                });
             }
 
             @Override
@@ -164,8 +181,8 @@ public class VentanaRevisarSugerencias {
                     comboEstado.setValue(sugerencia.getEstado()); // Muestra el estado actual
 
                     // Contenedor para los botones
-                    VBox botonesBox = new VBox(10, btnActualizar, btnRecomendar, btnRetroalimentacion); // Espaciado
-                                                                                                        // vertical
+                    VBox botonesBox = new VBox(10, btnActualizar, btnRecomendar, btnRetroalimentacion, btnComentario); // Espaciado
+                    // vertical
                     botonesBox.setAlignment(Pos.CENTER);
 
                     // Contenedor principal para el ComboBox y los botones
@@ -308,4 +325,40 @@ public class VentanaRevisarSugerencias {
             }
         });
     }
+
+    private void mostrarVentanaComentario(Sugerencia sugerencia) {
+        Stage ventanaComentario = new Stage();
+        ventanaComentario.setTitle("Comentario del Administrador");
+
+        Label etiqueta = new Label("Comentario para: " + sugerencia.getTitulo());
+        TextArea areaComentario = new TextArea();
+        areaComentario.setPromptText("Escribe el comentario para el empleado...");
+        areaComentario.setWrapText(true);
+
+        Button btnEnviar = new Button("Enviar");
+        btnEnviar.setStyle("-fx-background-color: #006666; -fx-text-fill: white;");
+        btnEnviar.setOnAction(e -> {
+            String comentario = areaComentario.getText().trim();
+            if (!comentario.isEmpty()) {
+                control.setNombreAdministrador(nombreAdministrador);
+                control.guardarComentario(sugerencia.getId(), comentario); // Este método lo defines tú en el
+                                                                           // controlador
+                Alert alerta = new Alert(Alert.AlertType.INFORMATION, "Comentario enviado correctamente.");
+                alerta.showAndWait();
+                ventanaComentario.close();
+            } else {
+                Alert alerta = new Alert(Alert.AlertType.ERROR, "El comentario no puede estar vacío.");
+                alerta.showAndWait();
+            }
+        });
+
+        VBox layout = new VBox(10, etiqueta, areaComentario, btnEnviar);
+        layout.setPadding(new Insets(15));
+        layout.setStyle("-fx-background-color: #eaf4f4;");
+
+        Scene escena = new Scene(layout, 400, 250);
+        ventanaComentario.setScene(escena);
+        ventanaComentario.show();
+    }
+
 }

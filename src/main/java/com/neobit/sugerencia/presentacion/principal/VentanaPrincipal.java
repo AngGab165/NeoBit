@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,14 @@ public class VentanaPrincipal {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Seleccione su Rol");
 
+        // Título principal
+        Label titulo = new Label("Sistema Sugerencias - Neobit");
+        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #004d4d;");
+
+        // Subtítulo
+        Label subtitulo = new Label("Seleccione su rol:");
+        subtitulo.setStyle("-fx-font-size: 16px; -fx-font-weight: normal; -fx-text-fill: #006666;");
+
         // Botón para elegir el rol de Empleado
         Button btnEmpleado = new Button("Empleado");
         btnEmpleado.setStyle(
@@ -49,7 +58,7 @@ public class VentanaPrincipal {
         btnForo.setOnAction(e -> ventanaForo.mostrar()); // Abre la ventana del foro
 
         // Diseño de la ventana
-        VBox vbox = new VBox(20, btnEmpleado, btnAdministrador, btnForo); // Agregar el botón del foro al VBox
+        VBox vbox = new VBox(20,btnEmpleado, btnAdministrador, btnForo); // Agregar el botón del foro al VBox
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(20));
         vbox.setStyle("-fx-background-color: #eaf4f4;");
