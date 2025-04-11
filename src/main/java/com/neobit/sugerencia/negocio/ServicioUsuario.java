@@ -81,4 +81,8 @@ public class ServicioUsuario {
     public boolean existeUsuario(String usuario) {
         return buscarUsuarioPorNombre(usuario) != null;
     }
+
+    public void actualizarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario); // Actualiza el usuario en la base de datos
+    }
 }

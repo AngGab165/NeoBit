@@ -30,7 +30,7 @@ public class VentanaUsuarioEmpleado {
     @Lazy
     private ControlUsuarioEmpleado control;
 
-    private TableView<Usuario> tableUsuarios;
+    TableView<Usuario> tableUsuarios;
     private ObservableList<Usuario> dataUsuarios;
 
     public void muestra() {
