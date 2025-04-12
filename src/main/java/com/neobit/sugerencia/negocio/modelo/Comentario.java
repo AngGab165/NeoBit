@@ -18,6 +18,7 @@ public class Comentario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long idSugerencia;
     private String texto;
     private String autor;
     private LocalDateTime fecha;
@@ -37,6 +38,14 @@ public class Comentario {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getIdSugerencia() {
+        return idSugerencia;
+    }
+
+    public void setIdSugerencia(Long idSugerencia) {
+        this.idSugerencia = idSugerencia;
     }
 
     public String getTexto() {
