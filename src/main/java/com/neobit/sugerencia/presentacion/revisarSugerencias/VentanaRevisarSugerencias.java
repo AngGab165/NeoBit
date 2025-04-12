@@ -1,5 +1,6 @@
 package com.neobit.sugerencia.presentacion.revisarSugerencias;
 
+import com.neobit.sugerencia.negocio.modelo.Comentario;
 import com.neobit.sugerencia.negocio.modelo.Prioridad;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 import javafx.application.Platform;
@@ -331,6 +332,29 @@ public class VentanaRevisarSugerencias {
         ventanaComentario.setTitle("Comentario del Administrador");
 
         Label etiqueta = new Label("Comentario para: " + sugerencia.getTitulo());
+
+        // Tabla de comentarios anteriores del empleado y el administrador
+        TableView<Comentario> tablaComentarios = new TableView<>();
+        TableColumn<Comentario, String> autorCol = new TableColumn<>("Autor");
+        autorCol.setCellValueFactory(new PropertyValueFactory<>("autor"));
+
+        TableColumn<Comentario, String> contenidoCol = new TableColumn<>("Contenido");
+        contenidoCol.setCellValueFactory(new PropertyValueFactory<>("texto"));
+
+        TableColumn<Comentario, LocalDate> fechaCol = new TableColumn<>("Fecha");
+        fechaCol.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+
+        tablaComentarios.getColumns().addAll(autorCol, contenidoCol, fechaCol);
+        tablaComentarios.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Obtenemos todos los comentarios (empleado y administrador)
+        List<Comentario> comentarios = sugerencia.getComentarios();
+        comentarios.sort(Comparator.comparing(Comentario::getFecha).reversed()); // Ordenamos por fecha descendente
+
+        // Asignamos los comentarios a la tabla
+        tablaComentarios.setItems(FXCollections.observableArrayList(comentarios));
+
+        // Área para comentario nuevo del administrador
         TextArea areaComentario = new TextArea();
         areaComentario.setPromptText("Escribe el comentario para el empleado...");
         areaComentario.setWrapText(true);
@@ -340,23 +364,35 @@ public class VentanaRevisarSugerencias {
         btnEnviar.setOnAction(e -> {
             String comentario = areaComentario.getText().trim();
             if (!comentario.isEmpty()) {
+                // Guardamos el comentario con el nombre del administrador
                 control.setNombreAdministrador(nombreAdministrador);
-                control.guardarComentario(sugerencia.getId(), comentario); // Este método lo defines tú en el
-                                                                           // controlador
+                control.guardarComentario(sugerencia.getId(), comentario);
+
+                // Recargar la lista de comentarios y actualizar la tabla
+                List<Comentario> comentariosActualizados = sugerencia.getComentarios();
+                comentariosActualizados.sort(Comparator.comparing(Comentario::getFecha).reversed());
+
+                // Actualizamos la tabla con los comentarios más recientes
+                tablaComentarios.setItems(FXCollections.observableArrayList(comentariosActualizados));
+
+                // Limpiar el área de texto para un nuevo comentario
+                areaComentario.clear();
+
+                // Mostrar un mensaje de confirmación
                 Alert alerta = new Alert(Alert.AlertType.INFORMATION, "Comentario enviado correctamente.");
                 alerta.showAndWait();
-                ventanaComentario.close();
             } else {
                 Alert alerta = new Alert(Alert.AlertType.ERROR, "El comentario no puede estar vacío.");
                 alerta.showAndWait();
             }
         });
 
-        VBox layout = new VBox(10, etiqueta, areaComentario, btnEnviar);
+        VBox layout = new VBox(10, etiqueta, new Label("Comentarios del empleado y administrador:"), tablaComentarios,
+                new Label("Agregar nuevo comentario:"), areaComentario, btnEnviar);
         layout.setPadding(new Insets(15));
         layout.setStyle("-fx-background-color: #eaf4f4;");
 
-        Scene escena = new Scene(layout, 400, 250);
+        Scene escena = new Scene(layout, 500, 450);
         ventanaComentario.setScene(escena);
         ventanaComentario.show();
     }

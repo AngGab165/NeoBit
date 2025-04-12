@@ -7,9 +7,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,8 +29,17 @@ public class VentanaForo {
         stage = new Stage();
         stage.setTitle("Foro Interno");
 
+        // Encabezado
+        Label lblTitulo = new Label("Foro Interno");
+        lblTitulo.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #006666;");
+        VBox header = new VBox(lblTitulo);
+        header.setAlignment(Pos.CENTER);
+        header.setPadding(new Insets(20));
+        header.setStyle("-fx-background-color: #F0F0F0;");
+
         // Tabla de temas
         TableView<TemaForo> tablaTemas = new TableView<>();
+        tablaTemas.setStyle("-fx-border-color: #006666;");
         ObservableList<TemaForo> temas = FXCollections.observableArrayList(foroService.obtenerTodosLosTemas());
 
         TableColumn<TemaForo, String> columnaTitulo = new TableColumn<>("Título");
@@ -53,6 +61,7 @@ public class VentanaForo {
 
         // Tabla de respuestas
         TableView<RespuestaForo> tablaRespuestas = new TableView<>();
+        tablaRespuestas.setStyle("-fx-border-color: #006666;");
         ObservableList<RespuestaForo> respuestas = FXCollections.observableArrayList();
 
         TableColumn<RespuestaForo, String> columnaAdministrador = new TableColumn<>("Administrador");
@@ -70,23 +79,21 @@ public class VentanaForo {
         // Formulario para agregar nuevos temas
         TextField txtTitulo = new TextField();
         txtTitulo.setPromptText("Título");
+        txtTitulo.setStyle("-fx-border-color: #006666; -fx-background-color: white;");
 
         TextField txtAutor = new TextField();
         txtAutor.setPromptText("Autor");
+        txtAutor.setStyle("-fx-border-color: #006666; -fx-background-color: white;");
 
         Button btnAgregar = new Button("Agregar Tema");
+        btnAgregar.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
         btnAgregar.setOnAction(e -> {
             String titulo = txtTitulo.getText();
             String autor = txtAutor.getText();
 
             if (!titulo.isEmpty() && !autor.isEmpty()) {
-                // Agregar el nuevo tema y obtener el tema guardado
                 TemaForo nuevoTema = foroService.agregarTema(titulo, autor);
-
-                // Agregar el nuevo tema directamente a la lista observable
                 temas.add(nuevoTema);
-
-                // Limpiar los campos del formulario
                 txtTitulo.clear();
                 txtAutor.clear();
             } else {
@@ -97,6 +104,7 @@ public class VentanaForo {
 
         // Botón para responder a un tema
         Button btnResponder = new Button("Responder");
+        btnResponder.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         btnResponder.setOnAction(e -> {
             TemaForo temaSeleccionado = tablaTemas.getSelectionModel().getSelectedItem();
             if (temaSeleccionado != null) {
@@ -112,13 +120,8 @@ public class VentanaForo {
                     adminDialog.setContentText("Administrador:");
 
                     adminDialog.showAndWait().ifPresent(administrador -> {
-                        // Agregar la respuesta al tema
                         foroService.agregarRespuesta(temaSeleccionado, administrador, contenido);
-
-                        // Actualizar la tabla de respuestas
                         respuestas.setAll(foroService.obtenerRespuestasPorTema(temaSeleccionado));
-
-                        // Actualizar la tabla de temas para reflejar el número de respuestas
                         tablaTemas.refresh();
                     });
                 });
@@ -140,15 +143,26 @@ public class VentanaForo {
         formulario.setAlignment(Pos.CENTER);
         formulario.setPadding(new Insets(10));
 
+        // Footer con derechos reservados
+        Text footerText = new Text("©2025 Derechos Reservados - Sistema Sugerencias - NeoBit");
+        footerText.setStyle("-fx-fill: white; -fx-font-size: 12px;");
+        HBox footer = new HBox(footerText);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(10));
+        footer.setStyle("-fx-background-color: #006666;");
+
         // Diseño principal
-        VBox vbox = new VBox(10, tablaTemas, tablaRespuestas, formulario, btnResponder);
-        vbox.setPadding(new Insets(10));
+        VBox vbox = new VBox(15, tablaTemas, tablaRespuestas, formulario, btnResponder);
+        vbox.setPadding(new Insets(20));
         vbox.setAlignment(Pos.CENTER);
+        vbox.setStyle("-fx-background-color: #eaf4f4;");
 
         BorderPane root = new BorderPane();
+        root.setTop(header);
         root.setCenter(vbox);
+        root.setBottom(footer);
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 900, 600);
         stage.setScene(scene);
         stage.show();
     }

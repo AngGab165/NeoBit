@@ -1,6 +1,8 @@
 package com.neobit.sugerencia.presentacion.revisarSugerencias;
 
+import com.neobit.sugerencia.datos.ComentarioRepository;
 import com.neobit.sugerencia.negocio.ServicioSugerencia;
+import com.neobit.sugerencia.negocio.modelo.Comentario;
 import com.neobit.sugerencia.negocio.modelo.Sugerencia;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -19,6 +21,9 @@ public class ControlRevisarSugerencias {
 
     @Autowired
     private VentanaRevisarSugerencias ventanaRevisarSugerencias;
+
+    @Autowired
+    private ComentarioRepository comentarioRepositorio;
 
     private String nombreAdministrador;
 
@@ -141,6 +146,10 @@ public class ControlRevisarSugerencias {
         } else {
             System.out.println("Nombre del administrador no establecido.");
         }
+    }
+
+    public List<Comentario> obtenerComentariosPorSugerencia(Long idSugerencia) {
+        return comentarioRepositorio.findByIdSugerencia(idSugerencia);
     }
 
 }
