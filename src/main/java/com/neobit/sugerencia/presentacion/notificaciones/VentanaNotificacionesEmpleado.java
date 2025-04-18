@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
 import com.neobit.sugerencia.presentacion.principal.ControlPrincipalEmpleado;
 
-
-
 import java.util.List;
 
 @Component
@@ -33,8 +31,8 @@ public class VentanaNotificacionesEmpleado {
     @Autowired
     private ControlPrincipalEmpleado control;
 
-        public void initializeUI() {
-            if (!Platform.isFxApplicationThread()) {
+    public void initializeUI() {
+        if (!Platform.isFxApplicationThread()) {
             Platform.runLater(this::initializeUI);
             return;
         }
@@ -98,32 +96,34 @@ public class VentanaNotificacionesEmpleado {
         stage.setScene(scene);
     }
 
-        private void configurarActualizacionAutomatica() {
-            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> actualizarTabla()));
-            timeline.setCycleCount(Timeline.INDEFINITE);
-            timeline.play();
+    private void configurarActualizacionAutomatica() {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> actualizarTabla()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+
+    // Modificar el método muestra()
+    public void muestra() {
+        initializeUI();
+        actualizarTabla();
+        configurarActualizacionAutomatica(); // Agregar esta línea
+        stage.show();
+    }
+
+    public void actualizarTabla() {
+        if (control.getUsuarioActual() == null) {
+            System.out.println("Advertencia: No hay usuario actual. No se pueden cargar notificaciones.");
+            return;
         }
 
-        // Modificar el método muestra()
-        public void muestra() {
-            initializeUI();
-            actualizarTabla();
-            configurarActualizacionAutomatica(); // Agregar esta línea
-            stage.show();
-        }
+        Long idUsuario = control.getUsuarioActual().getId();
+        System.out.println("Usuario actual ID: " + idUsuario); // <-- para depuración
 
-        public void actualizarTabla() {
-            if (control.getEmpleadoActual() == null) {
-                System.out.println("Advertencia: No hay empleado actual. No se pueden cargar notificaciones.");
-                return; // No intenta cargar notificaciones si no hay empleado
-            }
-
-        Long idEmpleado = control.getEmpleadoActual().getId();
         List<Notificaciones> notificaciones = control.getControlNotificaciones()
-                .obtenerNotificacionesPorEmpleado(idEmpleado);
+                .obtenerNotificacionesPorUsuario(idUsuario);
 
         ObservableList<Notificaciones> data = FXCollections.observableArrayList(notificaciones);
         tableNotificaciones.setItems(data);
     }
-}
 
+}

@@ -6,6 +6,7 @@ import com.neobit.sugerencia.datos.UsuarioRepository;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,4 +86,13 @@ public class ServicioUsuario {
     public void actualizarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario); // Actualiza el usuario en la base de datos
     }
+
+    public List<Usuario> obtenerEmpleados() {
+        return usuarioRepository.findAllByRol(Rol.EMPLEADO);
+    }
+
+    public Usuario obtenerUsuarioPorId(Long id) {
+        return usuarioRepository.findById(id).orElse(null);
+    }
+
 }

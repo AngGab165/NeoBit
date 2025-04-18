@@ -55,4 +55,8 @@ public class ServicioLoginEmpleado {
         return null;
     }
 
+    public Usuario obtenerUsuarioPorNombreUsuario(String usuario) {
+        return usuarioRepository.findByUsuario(usuario);
+    }
+
 }

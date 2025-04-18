@@ -20,18 +20,17 @@ public class ControlNotificaciones {
     private NotificacionesRepository notificacionesRepository;
 
     // Método modificado para aceptar lista de empleados
-    public void enviarNotificaciones(List<Long> idsEmpleados, String mensaje, LocalDateTime fecha) {
-        for (Long idEmpleado : idsEmpleados) {
+    public void enviarNotificaciones(List<Long> idsUsuarios, String mensaje, LocalDateTime fecha) {
+        for (Long idUsuario : idsUsuarios) {
             try {
                 servicio.crearNotificacion(
-                    idEmpleado, 
-                    "ADMINISTRADOR", 
-                    mensaje, 
-                    fecha, 
-                    "NO LEÍDA"
-                );
+                        idUsuario,
+                        "ADMINISTRADOR", // Esto setea el campo 'tipo'
+                        mensaje,
+                        fecha,
+                        "NO LEÍDA");
             } catch (Exception e) {
-                System.err.println("Error al enviar notificación al empleado ID: " + idEmpleado);
+                System.err.println("Error al enviar notificación al usuario ID: " + idUsuario);
                 e.printStackTrace();
             }
         }
@@ -55,7 +54,6 @@ public class ControlNotificaciones {
                 "NO LEÍDA");
     }
 
-    
     public void marcarComoLeida(Long idNotificacion) {
         servicioNotificaciones.marcarComoLeida(idNotificacion);
     }
@@ -64,10 +62,8 @@ public class ControlNotificaciones {
         return servicio.obtenerTodasLasNotificaciones();
     }
 
-    public List<Notificaciones> obtenerNotificacionesPorEmpleado(Long idEmpleado) {
-        // Aquí se asume que hay una relación en la base de datos entre 'Empleado' y
-        // 'Notificaciones'.
-        return notificacionesRepository.findByEmpleadoId(idEmpleado); // Esto depende de tu implementación.
+    public List<Notificaciones> obtenerNotificacionesPorUsuario(Long usuarioId) {
+        return servicio.obtenerNotificacionesPorUsuario(usuarioId); // Cambiado a usuarioId
     }
 
     public void eliminaNotificacion(Notificaciones notificacion) {
@@ -75,5 +71,3 @@ public class ControlNotificaciones {
         servicioNotificaciones.eliminarNotificacion(notificacion.getId());
     }
 }
-
-    

@@ -11,10 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NotificacionesRepository extends JpaRepository<Notificaciones, Long> {
 
-    List<Notificaciones> findByEmpleadoId(Long idEmpleado);
+    List<Notificaciones> findByUsuarioId(Long usuarioId);
+
     // Cambiar el nombre del método si es necesario
-    default List<Notificaciones> findByEmpleadold(Long idEmpleado) {
-        return findByEmpleadoId(idEmpleado);
-    }
+
 }
-    

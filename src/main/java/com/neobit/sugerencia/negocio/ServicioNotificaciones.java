@@ -2,6 +2,7 @@ package com.neobit.sugerencia.negocio;
 
 import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Notificaciones;
+import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.datos.NotificacionesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,21 +18,26 @@ public class ServicioNotificaciones {
     private NotificacionesRepository repository;
 
     @Autowired
-    private ServicioEmpleado servicioEmpleado;
-    public Notificaciones crearNotificacion(Long empleadoId, String tipo, String mensaje, LocalDateTime fecha, String estado) {
+    private ServicioUsuario servicioUsuario;
+
+    public Notificaciones crearNotificacion(Long usuarioId, String tipo, String mensaje, LocalDateTime fecha,
+            String estado) {
         Notificaciones notificacion = new Notificaciones();
         notificacion.setMensaje(mensaje);
         notificacion.setTipo(tipo);
         notificacion.setFecha(fecha);
         notificacion.setEstado(estado);
-        
-        if (empleadoId != null) {
-            Empleado empleado = servicioEmpleado.encuentraEmpleadoPorId(empleadoId);
-            if (empleado != null) {
-                notificacion.setEmpleado(empleado);
+
+        if (usuarioId != null) {
+            Usuario usuario = servicioUsuario.obtenerUsuarioPorId(usuarioId);
+            if (usuario != null) {
+                notificacion.setUsuario(usuario);
+                notificacion.setDestinatario(usuario.getNombre()); // Asignar el nombre del usuario como destinatario
+            } else {
+                throw new IllegalArgumentException("Empleado no encontrado con ID: " + usuarioId + "no existe.");
             }
         }
-        
+
         return repository.save(notificacion);
     }
 
@@ -64,5 +70,9 @@ public class ServicioNotificaciones {
             notificacion.setEstado("LEÍDA");
             return repository.save(notificacion);
         }).orElseThrow(() -> new IllegalArgumentException("Notificación no encontrada"));
+    }
+
+    public List<Notificaciones> obtenerNotificacionesPorUsuario(Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId); // Cambiado a usuarioId
     }
 }

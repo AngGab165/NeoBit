@@ -5,6 +5,7 @@ import com.neobit.sugerencia.negocio.modelo.Empleado;
 import com.neobit.sugerencia.negocio.modelo.Rol;
 import com.neobit.sugerencia.negocio.modelo.Usuario;
 import com.neobit.sugerencia.presentacion.detallesSugerencia.ControlVerDetallesSugerencia;
+import com.neobit.sugerencia.presentacion.principal.ControlPrincipalEmpleado;
 import com.neobit.sugerencia.presentacion.principal.VentanaPrincipalEmpleado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -25,6 +26,9 @@ public class ControlLoginEmpleado {
 
     private static String nombreEmpleado;
 
+    @Autowired
+    private ControlPrincipalEmpleado controlPrincipalEmpleado;
+
     /**
      * Realiza el login del empleado.
      *
@@ -39,18 +43,23 @@ public class ControlLoginEmpleado {
 
         boolean loginValido = servicioLoginEmpleado.validarLogin(usuario, contrasena);
         if (loginValido) {
+            Usuario usuarioEncontrado = servicioLoginEmpleado.obtenerUsuarioPorNombreUsuario(usuario);
+            if (usuarioEncontrado != null && usuarioEncontrado.getRol() == Rol.EMPLEADO) {
+                controlPrincipalEmpleado.setUsuarioActual(usuarioEncontrado);
+                nombreEmpleado = usuarioEncontrado.getNombre();
+                System.out.println("Nombre del empleado establecido en ControlLoginEmpleado: " + nombreEmpleado);
+                Usuario usuarioLogueado = new Usuario();
+                usuarioLogueado.setNombre(nombreEmpleado);
+                usuarioLogueado.setRol(Rol.EMPLEADO);
+                ventanaPrincipalEmpleado.setUsuario(usuarioLogueado);
 
-            nombreEmpleado = servicioLoginEmpleado.obtenerNombreEmpleado(usuario);
-            System.out.println("Nombre del empleado establecido en ControlLoginEmpleado: " + nombreEmpleado);
-            Usuario usuarioLogueado = new Usuario(); // Suponiendo que tienes un constructor adecuado
-            usuarioLogueado.setNombre(nombreEmpleado);
-            usuarioLogueado.setRol(Rol.EMPLEADO); // Asignar el rol correspondiente
-            ventanaPrincipalEmpleado.setUsuario(usuarioLogueado);
-
-            // Aquí ya está guardado el nombre del autor, entonces podemos proceder con el
-            // login
-            ventanaLoginEmpleado.cerrar();
-            ventanaPrincipalEmpleado.mostrar();
+                // Aquí ya está guardado el nombre del autor, entonces podemos proceder con el
+                // login
+                ventanaLoginEmpleado.cerrar();
+                ventanaPrincipalEmpleado.mostrar();
+            } else {
+                ventanaLoginEmpleado.mostrarMensajeError("No se encontró el usuario o no tiene rol de EMPLEADO.");
+            }
         } else {
             ventanaLoginEmpleado.mostrarMensajeError("Usuario o contraseña incorrectos.");
         }

@@ -35,7 +35,8 @@ public class Usuario {
     }
 
     // Constructor con parámetros
-    public Usuario(String usuario, String nombre, String correo, String contrasena, Rol rol) {
+    public Usuario(Long id, String usuario, String nombre, String correo, String contrasena, Rol rol) {
+        this.id = id;
         this.nombre = nombre;
         this.usuario = usuario;
         this.correo = correo;
