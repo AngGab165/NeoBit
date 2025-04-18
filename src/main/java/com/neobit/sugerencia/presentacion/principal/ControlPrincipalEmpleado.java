@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 @Component
 public class ControlPrincipalEmpleado {
 
-    private Empleado empleadoActual;
+    private Usuario usuarioActual;
     // Asegúrate de que estas ventanas estén correctamente definidas e implementadas
     @Autowired
     private VentanaPrincipalEmpleado ventanaPrincipalEmpleado;
@@ -89,28 +89,31 @@ public class ControlPrincipalEmpleado {
     }
 
     // Método para establecer el empleado actual
-    public void setEmpleadoActual(Empleado empleado) {
-        this.empleadoActual = empleado;
+    public void setUsuarioActual(Usuario usuario) {
+        System.out.println("Empleado establecido en ControlPrincipalEmpleado: " + usuario.getNombre());
+        this.usuarioActual = usuario;
     }
 
     // Método para obtener el empleado actual
-    public Empleado getEmpleadoActual() {
-        return empleadoActual;
+    public Usuario getUsuarioActual() {
+        System.out
+                .println("Empleado actual solicitado: " + (usuarioActual != null ? usuarioActual.getNombre() : "null"));
+        return usuarioActual;
     }
 
     // Método para obtener las notificaciones del empleado actual
     public List<Notificaciones> obtenerNotificacionesEmpleado() {
-        if (empleadoActual != null) {
-            return controlNotificaciones.obtenerNotificacionesPorEmpleado(empleadoActual.getId());
+        if (usuarioActual != null) {
+            return controlNotificaciones.obtenerNotificacionesPorUsuario(usuarioActual.getId());
         }
         return List.of(); // Si no hay empleado, retorna una lista vacía
     }
 
     // Método para actualizar las notificaciones
     public void actualizarNotificacionesEmpleado() {
-        if (empleadoActual != null) {
+        if (usuarioActual != null) {
             List<Notificaciones> notificaciones = controlNotificaciones
-                    .obtenerNotificacionesPorEmpleado(empleadoActual.getId());
+                    .obtenerNotificacionesPorUsuario(usuarioActual.getId());
             System.out.println("Notificaciones actualizadas: " + notificaciones.size());
         }
     }

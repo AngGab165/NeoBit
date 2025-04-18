@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 
 @Entity
 public class Notificaciones {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id; // Esto es la clave primaria correcta
 
     private String mensaje;
@@ -19,8 +19,8 @@ public class Notificaciones {
 
     private LocalDateTime fecha;
     @ManyToOne
-    @JoinColumn(name = "empleado_id", nullable = true)
-    private Empleado empleado;
+    @JoinColumn(name = "usuario_id", nullable = true)
+    private Usuario usuario;
 
     // Constructor vacío
     public Notificaciones() {
@@ -29,7 +29,7 @@ public class Notificaciones {
     public Notificaciones(String mensaje, LocalDateTime fecha, Empleado empleado) {
         this.mensaje = mensaje;
         this.fecha = fecha;
-        this.empleado = empleado;
+        this.usuario = usuario;
     }
 
     // Getters y Setters
@@ -81,12 +81,12 @@ public class Notificaciones {
         this.destinatario = autor;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
 }

@@ -31,7 +31,7 @@ public class ControlRegistroAdministrador {
         }
 
         // Crear objeto administrador
-        Usuario nuevoAdministrador = new Usuario(nombre, usuario, correo, contrasena, Rol.ADMINISTRADOR);
+        Usuario nuevoAdministrador = new Usuario(null, nombre, usuario, correo, contrasena, Rol.ADMINISTRADOR);
 
         // Registrar en el servicio
         servicioUsuario.registrarUsuario(nuevoAdministrador);

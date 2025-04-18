@@ -19,8 +19,8 @@ public class Empleado {
     private String usuario;
     private String clave;
 
-    //Constructor vacío requerido por JPA
-    public Empleado() {
+    // Constructor vacío requerido por JPA
+    public Empleado(Long id2, String nombre2, String correo2) {
     }
 
     // Constructor con nombre y correo

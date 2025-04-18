@@ -49,7 +49,7 @@ public class ControlRegistroEmpleado {
         }
 
         // Crear el usuario con rol EMPLEADO
-        Usuario nuevoEmpleado = new Usuario(nombre, usuario, correo, contrasena, Rol.EMPLEADO);
+        Usuario nuevoEmpleado = new Usuario(null, nombre, usuario, correo, contrasena, Rol.EMPLEADO);
 
         // Registrar el empleado en la base de datos
         servicioUsuario.registrarUsuario(nuevoEmpleado);

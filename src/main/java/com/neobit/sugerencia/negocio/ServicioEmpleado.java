@@ -34,19 +34,6 @@ public class ServicioEmpleado {
     }
 
     @Transactional
-    public void cargarDatosDePrueba() {
-    if (empleadoRepository.count() == 0) {
-        empleadoRepository.save(new Empleado("Juan Pérez", "juan@empresa.com", "juan", "1234"));
-        empleadoRepository.save(new Empleado("María García", "maria@empresa.com", "maria", "1234"));
-        empleadoRepository.save(new Empleado("Carlos López", "carlos@empresa.com", "carlos", "1234"));
-        }
-    }
-    @PostConstruct
-        public void init() {
-        cargarDatosDePrueba();
-        }
-
-    @Transactional
     public Empleado editaEmpleado(Empleado empleado) {
         return empleadoRepository.save(empleado);
     }
@@ -63,4 +50,5 @@ public class ServicioEmpleado {
     public Empleado encuentraEmpleadoPorId(Long id) {
         return empleadoRepository.findById(id).orElse(null);
     }
+
 }
